@@ -1420,7 +1420,7 @@ const AdminPanel: React.FC = () => {
                 gridTemplateColumns: restaurantMode ? 'repeat(auto-fit, minmax(500px, 1fr))' : 'none',
                 flexDirection: restaurantMode ? 'initial' : 'column',
                 gap: restaurantMode ? '32px' : '16px',
-                marginTop: restaurantMode ? '-200px' : '0',
+                marginTop: restaurantMode ? '-250px' : '0',
                 transition: 'all 0.5s ease 0.2s',
                 padding: restaurantMode ? '24px' : '0',
                 maxWidth: restaurantMode ? 'none' : '1400px',
