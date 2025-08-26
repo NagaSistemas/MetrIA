@@ -64,7 +64,7 @@ const LoginPage: React.FC = () => {
         boxShadow: '0 25px 80px rgba(0, 0, 0, 0.7)'
       }}>
         {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <div className="login-header" style={{ textAlign: 'center', marginBottom: '32px' }}>
           <img 
             src="/Logo.png" 
             alt="MetrIA Logo" 
@@ -97,9 +97,9 @@ const LoginPage: React.FC = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleLogin}>
+        <form className="login-form" onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column' }}>
           {/* Username */}
-          <div style={{ marginBottom: '24px' }}>
+          <div className="login-input-group" style={{ marginBottom: '24px' }}>
             <label style={{
               display: 'block',
               color: '#F5F5F5',
@@ -152,7 +152,7 @@ const LoginPage: React.FC = () => {
           </div>
 
           {/* Password */}
-          <div style={{ marginBottom: '24px' }}>
+          <div className="login-input-group" style={{ marginBottom: '24px' }}>
             <label style={{
               display: 'block',
               color: '#F5F5F5',
@@ -225,7 +225,7 @@ const LoginPage: React.FC = () => {
           </div>
 
           {/* Remember Me */}
-          <div style={{ 
+          <div className="login-checkbox-group" style={{ 
             display: 'flex', 
             alignItems: 'center', 
             marginBottom: '24px' 
@@ -371,58 +371,94 @@ const LoginPage: React.FC = () => {
         @media (max-width: 768px) {
           .login-container {
             padding: 16px !important;
-            margin: 0 !important;
+            align-items: flex-start !important;
+            padding-top: 40px !important;
           }
           
           .login-card {
             padding: 32px 24px !important;
             margin: 0 !important;
-            border-radius: 16px !important;
+            border-radius: 20px !important;
             max-width: none !important;
             width: 100% !important;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6) !important;
+          }
+          
+          .login-header {
+            margin-bottom: 32px !important;
           }
           
           .login-logo {
-            height: 96px !important;
+            height: 100px !important;
             margin-bottom: 16px !important;
           }
           
           .login-title {
-            font-size: 24px !important;
-            margin-bottom: 6px !important;
+            font-size: 26px !important;
+            margin-bottom: 8px !important;
+            line-height: 1.2 !important;
           }
           
           .login-subtitle {
-            font-size: 13px !important;
+            display: none !important;
+          }
+          
+          .login-form {
+            gap: 20px !important;
+          }
+          
+          .login-input-group {
+            margin-bottom: 20px !important;
           }
           
           .login-input {
-            padding: 14px 14px 14px 44px !important;
+            padding: 16px 16px 16px 48px !important;
             font-size: 16px !important;
+            border-radius: 12px !important;
+          }
+          
+          .login-checkbox-group {
+            margin-bottom: 24px !important;
           }
           
           .login-button {
-            padding: 16px !important;
+            padding: 18px !important;
             font-size: 16px !important;
+            border-radius: 12px !important;
+            margin-bottom: 24px !important;
           }
           
           .demo-info {
-            padding: 12px !important;
+            padding: 16px !important;
             margin-top: 24px !important;
+            border-radius: 12px !important;
           }
         }
         
         @media (max-width: 480px) {
           .login-container {
             padding: 12px !important;
+            padding-top: 30px !important;
           }
           
           .login-card {
-            padding: 24px 20px !important;
+            padding: 28px 20px !important;
+          }
+          
+          .login-logo {
+            height: 90px !important;
           }
           
           .login-title {
-            font-size: 22px !important;
+            font-size: 24px !important;
+          }
+          
+          .login-input {
+            padding: 15px 15px 15px 45px !important;
+          }
+          
+          .demo-info {
+            padding: 14px !important;
           }
         }
       `}</style>
