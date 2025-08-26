@@ -4,6 +4,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();
 
+// Debug route
+router.get('/debug', (req, res) => {
+  res.json({ 
+    status: 'Session routes active', 
+    timestamp: new Date().toISOString(),
+    version: '2.0'
+  });
+});
+
 // Get or create session for table
 router.get('/:restaurantId/:tableId', async (req, res) => {
   try {
