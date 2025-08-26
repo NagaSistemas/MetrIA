@@ -25,33 +25,31 @@ router.get('/:restaurantId/:tableId', async (req, res) => {
 
     let currentSession = tableData?.currentSession;
     
-    // Create new session if none exists or is closed
-    if (!currentSession || currentSession.status === 'CLOSED') {
-      const sessionId = uuidv4();
-      const sessionToken = uuidv4();
-      
-      currentSession = {
-        id: sessionId,
-        tableId,
-        restaurantId,
-        status: 'OPEN',
-        token: sessionToken,
-        createdAt: new Date(),
-        orders: [],
-        waiterCalls: [],
-        tableNumber: tableData?.number
-      };
+    // Always create new session for now to fix the issue
+    const sessionId = uuidv4();
+    const sessionToken = uuidv4();
+    
+    currentSession = {
+      id: sessionId,
+      tableId,
+      restaurantId,
+      status: 'OPEN',
+      token: sessionToken,
+      createdAt: new Date(),
+      orders: [],
+      waiterCalls: [],
+      tableNumber: tableData?.number
+    };
 
-      // Save to both collections
-      await Promise.all([
-        db.collection('tables').doc(tableId).update({
-          currentSession: currentSession
-        }),
-        db.collection('sessions').doc(sessionId).set(currentSession)
-      ]);
-      
-      console.log('Created new session:', sessionId);
-    }
+    // Save to both collections
+    await Promise.all([
+      db.collection('tables').doc(tableId).update({
+        currentSession: currentSession
+      }),
+      db.collection('sessions').doc(sessionId).set(currentSession)
+    ]);
+    
+    console.log('Created new session:', sessionId);
 
     // Get restaurant menu
     const restaurantDoc = await db.collection('restaurants').doc(restaurantId).get();
