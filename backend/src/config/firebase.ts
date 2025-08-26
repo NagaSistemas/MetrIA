@@ -1,5 +1,7 @@
 import admin from 'firebase-admin';
 
+let db: any;
+
 export const initializeFirebase = () => {
   if (!admin.apps.length) {
     const serviceAccount = require('../../metria-fcbbc-firebase-adminsdk-fbsvc-4cc85edb37.json');
@@ -8,7 +10,8 @@ export const initializeFirebase = () => {
       databaseURL: 'https://metria-fcbbc.firebaseio.com'
     });
   }
+  db = admin.firestore();
 };
 
-export const db = admin.firestore();
+export { db };
 export default admin;
