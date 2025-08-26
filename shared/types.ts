@@ -42,7 +42,7 @@ export interface Order {
   sessionId: string;
   items: OrderItem[];
   total: number;
-  status: 'PENDING' | 'CONFIRMED' | 'PREPARING' | 'READY' | 'DELIVERED';
+  status: 'PENDING' | 'CONFIRMED' | 'PREPARING' | 'READY' | 'DELIVERED' | 'CANCELLED';
   paymentStatus: 'PENDING' | 'PAID' | 'FAILED';
   paymentId?: string;
   isExtra: boolean;

@@ -213,6 +213,60 @@ router.get('/orders', async (req, res) => {
   }
 });
 
+// Update order status
+router.put('/orders/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    if (!status) {
+      return res.status(400).json({ error: 'Status is required' });
+    }
+
+    const orderRef = db.collection('orders').doc(id);
+    const orderDoc = await orderRef.get();
+    
+    if (!orderDoc.exists) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    await orderRef.update({
+      status,
+      updatedAt: new Date()
+    });
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Cancel order
+router.post('/orders/:id/cancel', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const orderRef = db.collection('orders').doc(id);
+    const orderDoc = await orderRef.get();
+    
+    if (!orderDoc.exists) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    await orderRef.update({
+      status: 'CANCELLED',
+      cancelledAt: new Date(),
+      updatedAt: new Date()
+    });
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error canceling order:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // AI PROMPT MANAGEMENT
 
 // Get AI prompt

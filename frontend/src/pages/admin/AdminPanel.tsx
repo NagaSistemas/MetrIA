@@ -3,6 +3,7 @@ import type { Restaurant, Table, Order } from '../../../../shared/types';
 import { Plus, Edit, Download, Users, TrendingUp, Clock, DollarSign, ChefHat, Sparkles, BarChart3, FileText, Trash2, QrCode, Table as TableIcon } from 'lucide-react';
 import MenuManagement from './components/MenuManagement';
 import AIConfiguration from './components/AIConfiguration';
+import OrderCard from './components/OrderCard';
 
 const AdminPanel: React.FC = () => {
   const [, setRestaurant] = useState<Restaurant | null>(null);
@@ -81,6 +82,30 @@ const AdminPanel: React.FC = () => {
       }));
     } catch (error) {
       console.error('Error fetching orders:', error);
+    }
+  };
+
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/admin/orders/${orderId}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+      fetchOrders();
+    } catch (error) {
+      console.error('Error updating order status:', error);
+    }
+  };
+
+  const cancelOrder = async (orderId: string) => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/admin/orders/${orderId}/cancel`, {
+        method: 'POST'
+      });
+      fetchOrders();
+    } catch (error) {
+      console.error('Error canceling order:', error);
     }
   };
 
@@ -1143,7 +1168,7 @@ const AdminPanel: React.FC = () => {
               onClick={() => setRestaurantMode(!restaurantMode)}
               style={{
                 position: 'fixed',
-                top: restaurantMode ? '20px' : '120px',
+                top: '20px',
                 right: '20px',
                 background: restaurantMode ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #10b981, #059669)',
                 color: '#F5F5F5',
@@ -1292,53 +1317,51 @@ const AdminPanel: React.FC = () => {
               </div>
             </div>
 
-            {/* Filters */}
-            <div style={{
-              background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
-              border: '1px solid rgba(212, 175, 55, 0.2)',
-              borderRadius: '16px',
-              padding: '24px',
-              opacity: restaurantMode ? 0 : 1,
-              transform: restaurantMode ? 'translateY(-50px)' : 'translateY(0)',
-              transition: 'all 0.5s ease 0.1s',
-              pointerEvents: restaurantMode ? 'none' : 'auto'
-            }}>
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
-                <span style={{ color: '#F5F5F5', fontWeight: '500', marginRight: '8px' }}>Filtrar por status:</span>
-                {[
-                  { id: 'all', label: 'Todos', color: '#F5F5F5' },
-                  { id: 'PENDING', label: 'Pendentes', color: '#f59e0b' },
-                  { id: 'PREPARING', label: 'Preparando', color: '#3b82f6' },
-                  { id: 'READY', label: 'Prontos', color: '#10b981' },
-                  { id: 'DELIVERED', label: 'Entregues', color: '#6b7280' }
-                ].map(filter => (
-                  <button
-                    key={filter.id}
-                    style={{
-                      padding: '8px 16px',
-                      borderRadius: '20px',
-                      border: 'none',
-                      backgroundColor: 'rgba(212, 175, 55, 0.1)',
-                      color: filter.color,
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.2)';
-                      e.currentTarget.style.transform = 'translateY(-1px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    {filter.label}
-                  </button>
-                ))}
+            {/* Filters - Hidden in restaurant mode */}
+            {!restaurantMode && (
+              <div style={{
+                background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
+                border: '1px solid rgba(212, 175, 55, 0.2)',
+                borderRadius: '16px',
+                padding: '24px'
+              }}>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <span style={{ color: '#F5F5F5', fontWeight: '500', marginRight: '8px' }}>Filtrar por status:</span>
+                  {[
+                    { id: 'all', label: 'Todos', color: '#F5F5F5' },
+                    { id: 'PENDING', label: 'Pendentes', color: '#f59e0b' },
+                    { id: 'PREPARING', label: 'Preparando', color: '#3b82f6' },
+                    { id: 'READY', label: 'Prontos', color: '#10b981' },
+                    { id: 'DELIVERED', label: 'Entregues', color: '#6b7280' }
+                  ].map(filter => (
+                    <button
+                      key={filter.id}
+                      style={{
+                        padding: '8px 16px',
+                        borderRadius: '20px',
+                        border: 'none',
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                        color: filter.color,
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.2)';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Orders List */}
             <div style={{ 
@@ -1385,217 +1408,12 @@ const AdminPanel: React.FC = () => {
                 </div>
               ) : (
                 orders.map(order => (
-                  <div 
+                  <OrderCard
                     key={order.id}
-                    style={{
-                      background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
-                      border: '1px solid rgba(212, 175, 55, 0.2)',
-                      borderRadius: '16px',
-                      padding: '24px',
-                      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
-                      transition: 'all 0.3s ease',
-                      position: 'relative',
-                      overflow: 'hidden'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 15px 50px rgba(0, 0, 0, 0.7)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.5)';
-                    }}
-                  >
-                    {/* Status Indicator */}
-                    <div style={{
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
-                      width: '4px',
-                      height: '100%',
-                      background: order.status === 'DELIVERED' ? 'linear-gradient(180deg, #10b981, #059669)' :
-                                 order.status === 'READY' ? 'linear-gradient(180deg, #3b82f6, #1d4ed8)' :
-                                 order.status === 'PREPARING' ? 'linear-gradient(180deg, #f59e0b, #d97706)' :
-                                 'linear-gradient(180deg, #ef4444, #dc2626)'
-                    }}></div>
-                    
-                    {/* Order Header */}
-                    <div style={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      alignItems: 'flex-start', 
-                      marginBottom: '20px' 
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                        <div style={{
-                          width: '56px',
-                          height: '56px',
-                          background: order.status === 'DELIVERED' ? 'linear-gradient(135deg, #10b981, #059669)' :
-                                     order.status === 'READY' ? 'linear-gradient(135deg, #3b82f6, #1d4ed8)' :
-                                     order.status === 'PREPARING' ? 'linear-gradient(135deg, #f59e0b, #d97706)' :
-                                     'linear-gradient(135deg, #ef4444, #dc2626)',
-                          borderRadius: '12px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)'
-                        }}>
-                          <FileText size={28} style={{ color: '#F5F5F5' }} />
-                        </div>
-                        <div>
-                          <h3 style={{ 
-                            fontFamily: 'Cinzel, serif',
-                            fontSize: '20px', 
-                            fontWeight: '700', 
-                            color: '#D4AF37',
-                            margin: 0,
-                            marginBottom: '4px'
-                          }}>
-                            Pedido #{order.id.slice(-6)}
-                          </h3>
-                          <p style={{ 
-                            color: '#F5F5F5', 
-                            opacity: 0.6, 
-                            fontSize: '14px',
-                            margin: 0,
-                            fontFamily: 'monospace'
-                          }}>
-                            Mesa {order.sessionId?.slice(-3)} • {new Date(order.createdAt).toLocaleString('pt-BR')}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      {/* Status Badge */}
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        backgroundColor: order.status === 'DELIVERED' ? 'rgba(16, 185, 129, 0.2)' :
-                                        order.status === 'READY' ? 'rgba(59, 130, 246, 0.2)' :
-                                        order.status === 'PREPARING' ? 'rgba(245, 158, 11, 0.2)' :
-                                        'rgba(239, 68, 68, 0.2)',
-                        border: `1px solid ${order.status === 'DELIVERED' ? 'rgba(16, 185, 129, 0.4)' :
-                                             order.status === 'READY' ? 'rgba(59, 130, 246, 0.4)' :
-                                             order.status === 'PREPARING' ? 'rgba(245, 158, 11, 0.4)' :
-                                             'rgba(239, 68, 68, 0.4)'}`,
-                        padding: '8px 16px',
-                        borderRadius: '25px'
-                      }}>
-                        <div style={{
-                          width: '8px',
-                          height: '8px',
-                          borderRadius: '50%',
-                          backgroundColor: order.status === 'DELIVERED' ? '#10b981' :
-                                          order.status === 'READY' ? '#3b82f6' :
-                                          order.status === 'PREPARING' ? '#f59e0b' :
-                                          '#ef4444',
-                          animation: order.status === 'PENDING' ? 'pulse 2s infinite' : 'none'
-                        }}></div>
-                        <span style={{
-                          color: order.status === 'DELIVERED' ? '#10b981' :
-                                order.status === 'READY' ? '#3b82f6' :
-                                order.status === 'PREPARING' ? '#f59e0b' :
-                                '#ef4444',
-                          fontSize: '14px',
-                          fontWeight: '600'
-                        }}>
-                          {order.status === 'DELIVERED' ? 'Entregue' :
-                           order.status === 'READY' ? 'Pronto' :
-                           order.status === 'PREPARING' ? 'Preparando' :
-                           'Pendente'}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Order Items */}
-                    <div style={{
-                      backgroundColor: 'rgba(13, 13, 13, 0.5)',
-                      borderRadius: '12px',
-                      padding: '20px',
-                      marginBottom: '20px',
-                      border: '1px solid rgba(212, 175, 55, 0.1)'
-                    }}>
-                      <h4 style={{
-                        color: '#F5F5F5',
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        marginBottom: '16px',
-                        margin: 0
-                      }}>
-                        Itens do Pedido ({order.items?.length || 0})
-                      </h4>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        {order.items?.map((item: any, index: number) => (
-                          <div key={index} style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: '12px',
-                            backgroundColor: 'rgba(212, 175, 55, 0.05)',
-                            borderRadius: '8px',
-                            border: '1px solid rgba(212, 175, 55, 0.1)'
-                          }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                              <span style={{
-                                backgroundColor: '#D4AF37',
-                                color: '#0D0D0D',
-                                width: '24px',
-                                height: '24px',
-                                borderRadius: '50%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '12px',
-                                fontWeight: '700'
-                              }}>
-                                {item.quantity}x
-                              </span>
-                              <span style={{ color: '#F5F5F5', fontWeight: '500' }}>
-                                {item.name}
-                              </span>
-                            </div>
-                            <span style={{ color: '#D4AF37', fontWeight: '600' }}>
-                              R$ {(item.price * item.quantity).toFixed(2)}
-                            </span>
-                          </div>
-                        )) || (
-                          <p style={{ color: '#F5F5F5', opacity: 0.6, textAlign: 'center', margin: 0 }}>
-                            Nenhum item encontrado
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {/* Order Total */}
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      paddingTop: '16px',
-                      borderTop: '1px solid rgba(212, 175, 55, 0.2)'
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                        <span style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '14px' }}>
-                          Tempo decorrido:
-                        </span>
-                        <span style={{ color: '#F5F5F5', fontSize: '14px', fontWeight: '500' }}>
-                          {Math.floor((Date.now() - new Date(order.createdAt).getTime()) / (1000 * 60))} min
-                        </span>
-                      </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '14px', marginBottom: '4px' }}>
-                          Total do Pedido
-                        </div>
-                        <div style={{ 
-                          color: '#D4AF37', 
-                          fontSize: '24px', 
-                          fontWeight: '700'
-                        }}>
-                          R$ {order.total.toFixed(2)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    order={order}
+                    onUpdateStatus={updateOrderStatus}
+                    onCancelOrder={cancelOrder}
+                  />
                 ))
               )}
             </div>
