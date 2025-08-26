@@ -122,7 +122,7 @@ router.delete('/categories/:id', async (req, res) => {
       .get();
     
     const batch = db.batch();
-    menuItemsSnapshot.docs.forEach(doc => {
+    menuItemsSnapshot.docs.forEach((doc: any) => {
       batch.delete(doc.ref);
     });
     
