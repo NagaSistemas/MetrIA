@@ -254,6 +254,15 @@ router.post('/orders/:id/cancel', async (req, res) => {
       return res.status(404).json({ error: 'Order not found' });
     }
 
+    const orderData = orderDoc.data();
+    
+    // Se já está cancelado, excluir permanentemente
+    if (orderData?.status === 'CANCELLED') {
+      await orderRef.delete();
+      return res.json({ success: true, deleted: true });
+    }
+    
+    // Senão, apenas cancelar
     await orderRef.update({
       status: 'CANCELLED',
       cancelledAt: new Date(),

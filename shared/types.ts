@@ -40,13 +40,14 @@ export interface MenuItem {
 export interface Order {
   id: string;
   sessionId: string;
+  tableNumber?: number;
   items: OrderItem[];
   total: number;
   status: 'PENDING' | 'CONFIRMED' | 'PREPARING' | 'READY' | 'DELIVERED' | 'CANCELLED';
   paymentStatus: 'PENDING' | 'PAID' | 'FAILED';
   paymentId?: string;
   isExtra: boolean;
-  createdAt: Date;
+  createdAt: Date | string;
 }
 
 export interface OrderItem {

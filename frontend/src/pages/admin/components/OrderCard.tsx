@@ -12,21 +12,46 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onUpdateStatus, onCancelOr
 
   useEffect(() => {
     const updateTimer = () => {
-      const createdTime = typeof order.createdAt === 'string' 
-        ? new Date(order.createdAt).getTime() 
-        : order.createdAt.getTime();
-      setTimeElapsed(Math.floor((Date.now() - createdTime) / 1000));
+      try {
+        const createdTime = typeof order.createdAt === 'string' 
+          ? new Date(order.createdAt).getTime() 
+          : new Date(order.createdAt).getTime();
+        
+        if (!isNaN(createdTime)) {
+          setTimeElapsed(Math.floor((Date.now() - createdTime) / 1000));
+        }
+      } catch (error) {
+        console.error('Error calculating time:', error);
+        setTimeElapsed(0);
+      }
     };
     
-    updateTimer(); // Atualiza imediatamente
+    updateTimer();
     const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
   }, [order.createdAt]);
 
   const formatTime = (seconds: number) => {
+    if (isNaN(seconds) || seconds < 0) return '00:00';
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+  
+  const formatDate = (date: Date | string) => {
+    try {
+      const dateObj = typeof date === 'string' ? new Date(date) : new Date(date);
+      if (isNaN(dateObj.getTime())) return 'Data inválida';
+      return dateObj.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      return 'Data inválida';
+    }
   };
 
   const handleUpdateStatus = (newStatus: string) => {
@@ -131,39 +156,40 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onUpdateStatus, onCancelOr
               <span style={{
                 background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
                 color: '#0D0D0D',
-                padding: '4px 12px',
+                padding: '6px 14px',
                 borderRadius: '12px',
-                fontSize: '14px',
+                fontSize: '16px',
                 fontWeight: '700'
               }}>
-                🏠 Mesa {order.tableNumber || order.sessionId?.slice(-3)}
+                🏠 Mesa {order.tableNumber || 'N/A'}
               </span>
               <span style={{
                 color: '#F5F5F5',
-                opacity: 0.7,
+                opacity: 0.8,
                 fontSize: '14px',
-                fontFamily: 'monospace'
+                fontWeight: '500'
               }}>
-                {new Date(typeof order.createdAt === 'string' ? order.createdAt : order.createdAt).toLocaleString('pt-BR')}
+                {formatDate(order.createdAt)}
               </span>
             </div>
             <div style={{
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              backgroundColor: order.status === 'DELIVERED' ? 'rgba(16, 185, 129, 0.2)' :
-                              order.status === 'READY' ? 'rgba(59, 130, 246, 0.2)' :
-                              order.status === 'PREPARING' ? 'rgba(245, 158, 11, 0.2)' :
-                              order.status === 'CANCELLED' ? 'rgba(239, 68, 68, 0.2)' :
-                              'rgba(245, 158, 11, 0.2)',
+              backgroundColor: order.status === 'DELIVERED' ? 'rgba(16, 185, 129, 0.15)' :
+                              order.status === 'READY' ? 'rgba(59, 130, 246, 0.15)' :
+                              order.status === 'PREPARING' ? 'rgba(245, 158, 11, 0.15)' :
+                              order.status === 'CANCELLED' ? 'rgba(239, 68, 68, 0.15)' :
+                              'rgba(245, 158, 11, 0.15)',
               border: `2px solid ${order.status === 'DELIVERED' ? '#10b981' :
                                    order.status === 'READY' ? '#3b82f6' :
                                    order.status === 'PREPARING' ? '#f59e0b' :
                                    order.status === 'CANCELLED' ? '#ef4444' :
                                    '#f59e0b'}`,
-              padding: '8px 16px',
-              borderRadius: '25px',
-              width: 'fit-content'
+              padding: '10px 18px',
+              borderRadius: '16px',
+              width: 'fit-content',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
             }}>
               <div style={{
                 width: '12px',
@@ -339,6 +365,30 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onUpdateStatus, onCancelOr
             }}
           >
             ❌ Cancelar Pedido
+          </button>
+        )}
+        
+        {order.status === 'CANCELLED' && (
+          <button
+            onClick={() => {
+              if (confirm(`⚠️ ATENÇÃO: Tem certeza que deseja EXCLUIR permanentemente o Pedido #${order.id.slice(-6)}?\n\nEsta ação é IRREVERSÍVEL.`)) {
+                onCancelOrder(order.id);
+              }
+            }}
+            style={{
+              background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+              color: '#F5F5F5',
+              border: 'none',
+              padding: '12px 20px',
+              borderRadius: '12px',
+              fontSize: '14px',
+              fontWeight: '700',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 15px rgba(107, 114, 128, 0.3)'
+            }}
+          >
+            🗑️ Excluir Pedido
           </button>
         )}
       </div>
