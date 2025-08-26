@@ -4,13 +4,21 @@ let db: any;
 
 export const initializeFirebase = () => {
   if (!admin.apps.length) {
+    const projectId = process.env.FIREBASE_PROJECT_ID || 'metria-fcbbc';
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || 'firebase-adminsdk-fbsvc@metria-fcbbc.iam.gserviceaccount.com';
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+    
+    if (!privateKey) {
+      throw new Error('FIREBASE_PRIVATE_KEY environment variable is required');
+    }
+    
     admin.initializeApp({
       credential: admin.credential.cert({
-        projectId: 'metria-fcbbc',
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL || 'firebase-adminsdk-fbsvc@metria-fcbbc.iam.gserviceaccount.com',
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || ''
+        projectId,
+        clientEmail,
+        privateKey
       }),
-      databaseURL: 'https://metria-fcbbc.firebaseio.com'
+      databaseURL: `https://${projectId}.firebaseio.com`
     });
   }
   db = admin.firestore();

@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || 'sk-94b3a551443148f59500c0644ec2e5f0';
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+
+if (!DEEPSEEK_API_KEY) {
+  throw new Error('DEEPSEEK_API_KEY environment variable is required');
+}
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 
 interface ChatMessage {

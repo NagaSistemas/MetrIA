@@ -6,12 +6,17 @@ node_modules/
 .env
 .env.local
 .env.production
+.env.development
 
 # Build outputs
 dist/
 build/
 */dist/
 */build/
+
+# Firebase credentials (SECURITY)
+*firebase-adminsdk*.json
+*.json
 
 # Logs
 *.log
@@ -25,8 +30,8 @@ pids
 *.seed
 *.pid.lock
 
-# Firebase
-*firebase-adminsdk*.json
+# Coverage directory used by tools like istanbul
+coverage/
 
 # IDE
 .vscode/
@@ -37,16 +42,6 @@ pids
 # OS
 .DS_Store
 Thumbs.db
-
-# Python (Agente)
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-.venv/
 
 # Temporary files
 *.tmp
