@@ -178,7 +178,7 @@ const LoginPage: React.FC = () => {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="login-input"
+                className="login-input password-input"
                 style={{
                   width: '100%',
                   padding: '16px 48px 16px 48px',
@@ -204,6 +204,7 @@ const LoginPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
+                className="password-toggle"
                 style={{
                   position: 'absolute',
                   right: '16px',
@@ -225,7 +226,7 @@ const LoginPage: React.FC = () => {
           </div>
 
           {/* Remember Me */}
-          <div className="login-checkbox-group" style={{ 
+          <div className="login-checkbox-group checkbox-container" style={{ 
             display: 'flex', 
             alignItems: 'center', 
             marginBottom: '24px' 
@@ -235,6 +236,7 @@ const LoginPage: React.FC = () => {
               id="rememberMe"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
+              className="checkbox-input"
               style={{
                 width: '18px',
                 height: '18px',
@@ -417,6 +419,25 @@ const LoginPage: React.FC = () => {
             border-radius: 12px !important;
           }
           
+          .password-input {
+            padding: 16px 48px 16px 48px !important;
+          }
+          
+          .password-toggle {
+            right: 16px !important;
+          }
+          
+          .checkbox-container {
+            align-items: center !important;
+            gap: 12px !important;
+          }
+          
+          .checkbox-input {
+            width: 18px !important;
+            height: 18px !important;
+            margin-right: 0 !important;
+          }
+          
           .login-checkbox-group {
             margin-bottom: 24px !important;
           }
@@ -455,6 +476,10 @@ const LoginPage: React.FC = () => {
           
           .login-input {
             padding: 15px 15px 15px 45px !important;
+          }
+          
+          .password-input {
+            padding: 15px 45px 15px 45px !important;
           }
           
           .demo-info {
