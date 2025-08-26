@@ -13,6 +13,7 @@ const AdminPanel: React.FC = () => {
   const [editingTable, setEditingTable] = useState<Table | null>(null);
   const [editTableNumber, setEditTableNumber] = useState('');
   const [showQRModal, setShowQRModal] = useState<Table | null>(null);
+  const [restaurantMode, setRestaurantMode] = useState(false);
   const [stats, setStats] = useState({
     totalTables: 0,
     activeTables: 0,
@@ -217,7 +218,9 @@ const AdminPanel: React.FC = () => {
       <header style={{
         background: 'linear-gradient(135deg, #2C2C2C 0%, #0D0D0D 100%)',
         borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+        transform: (activeTab === 'orders' && restaurantMode) ? 'translateY(-100%)' : 'translateY(0)',
+        transition: 'transform 0.5s ease'
       }}>
         <div style={{
           maxWidth: '1400px',
@@ -1100,14 +1103,48 @@ const AdminPanel: React.FC = () => {
 
         {/* Orders Management */}
         {activeTab === 'orders' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', position: 'relative' }}>
+            {/* Restaurant Mode Toggle */}
+            <button
+              onClick={() => setRestaurantMode(!restaurantMode)}
+              style={{
+                position: 'fixed',
+                top: restaurantMode ? '20px' : '120px',
+                right: '20px',
+                background: restaurantMode ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #10b981, #059669)',
+                color: '#F5F5F5',
+                border: 'none',
+                padding: '12px 20px',
+                borderRadius: '25px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                zIndex: 1000,
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+              }}
+            >
+              {restaurantMode ? '🏠 Desativar Modo Restaurante' : '🍳 Ativar Modo Restaurante'}
+            </button>
             {/* Professional Header */}
             <div style={{
               background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
               border: '1px solid rgba(212, 175, 55, 0.3)',
               borderRadius: '16px',
               padding: '32px',
-              textAlign: 'center'
+              textAlign: 'center',
+              opacity: restaurantMode ? 0 : 1,
+              transform: restaurantMode ? 'translateY(-100px)' : 'translateY(0)',
+              transition: 'all 0.5s ease',
+              pointerEvents: restaurantMode ? 'none' : 'auto'
             }}>
               <div style={{
                 width: '80px',
@@ -1226,7 +1263,11 @@ const AdminPanel: React.FC = () => {
               background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
               border: '1px solid rgba(212, 175, 55, 0.2)',
               borderRadius: '16px',
-              padding: '24px'
+              padding: '24px',
+              opacity: restaurantMode ? 0 : 1,
+              transform: restaurantMode ? 'translateY(-50px)' : 'translateY(0)',
+              transition: 'all 0.5s ease 0.1s',
+              pointerEvents: restaurantMode ? 'none' : 'auto'
             }}>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
                 <span style={{ color: '#F5F5F5', fontWeight: '500', marginRight: '8px' }}>Filtrar por status:</span>
@@ -1266,7 +1307,13 @@ const AdminPanel: React.FC = () => {
             </div>
 
             {/* Orders List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '16px',
+              marginTop: restaurantMode ? '-200px' : '0',
+              transition: 'all 0.5s ease 0.2s'
+            }}>
               {orders.length === 0 ? (
                 <div style={{
                   backgroundColor: '#2C2C2C',

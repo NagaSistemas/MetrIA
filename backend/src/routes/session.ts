@@ -51,7 +51,10 @@ router.get('/:restaurantId/:tableId', async (req, res) => {
     const restaurantData = restaurantDoc.data();
 
     res.json({
-      session: tableData?.currentSession,
+      session: {
+        ...tableData?.currentSession,
+        tableNumber: tableData?.number
+      },
       menu: restaurantData?.menu || []
     });
   } catch (error) {

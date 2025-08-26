@@ -34,19 +34,19 @@ const TableSessionPage: React.FC = () => {
     setError(null);
 
     try {
-      const url = token 
-        ? `${import.meta.env.VITE_API_URL}/api/session/${restaurantId}/${tableId}?t=${token}`
-        : `${import.meta.env.VITE_API_URL}/api/session/${restaurantId}/${tableId}`;
+      const url = `${import.meta.env.VITE_API_URL}/api/session/${restaurantId}/${tableId}`;
         
       const response = await fetch(url);
-      const data = await response.json();
-
+      
       if (!response.ok) {
-        throw new Error(data.error || 'Erro ao carregar sessão');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Mesa não encontrada');
       }
-
+      
+      const data = await response.json();
       setSession(data.session);
     } catch (err: any) {
+      console.error('Session validation error:', err);
       setError(err.message);
     } finally {
       setIsLoading(false);
