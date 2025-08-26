@@ -1,0 +1,98 @@
+/* Mobile First Responsive Design */
+@media (max-width: 768px) {
+  * {
+    box-sizing: border-box !important;
+  }
+  
+  body {
+    overflow-x: hidden !important;
+  }
+  
+  /* Container Fixes */
+  .container, [style*="maxWidth"] {
+    max-width: 100% !important;
+    padding: 8px !important;
+    margin: 0 !important;
+  }
+  
+  /* Text Fixes */
+  h1, h2, h3, h4, h5, h6, p, span, div {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+    font-size: clamp(12px, 4vw, 18px) !important;
+  }
+  
+  /* Button Fixes */
+  button {
+    width: 100% !important;
+    min-height: 44px !important;
+    padding: 12px 8px !important;
+    font-size: 14px !important;
+    margin: 4px 0 !important;
+    border-radius: 8px !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Card Fixes */
+  [style*="background: 'linear-gradient"] {
+    padding: 12px !important;
+    margin: 8px 4px !important;
+    width: calc(100% - 8px) !important;
+    max-width: 100% !important;
+    border-radius: 8px !important;
+  }
+  
+  /* Grid Fixes */
+  [style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  
+  /* Flex Fixes */
+  [style*="justifyContent: 'space-between'"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  
+  [style*="display: 'flex'"] {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  
+  /* Input Fixes */
+  input, textarea, select {
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+    border-radius: 8px !important;
+  }
+  
+  /* Header Fixes */
+  header {
+    padding: 12px 8px !important;
+  }
+  
+  /* Logo Fixes */
+  img[alt*="Logo"] {
+    height: 40px !important;
+    width: auto !important;
+  }
+  
+  /* Modal Fixes */
+  [style*="position: 'fixed'"][style*="inset: '0'"] {
+    padding: 16px 8px !important;
+  }
+  
+  /* Prevent Overflow */
+  [style*="minWidth"] {
+    min-width: unset !important;
+  }
+  
+  [style*="width: '380px'"] {
+    width: 100% !important;
+  }
+}
