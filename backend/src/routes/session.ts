@@ -60,4 +60,53 @@ router.get('/:restaurantId/:tableId', async (req, res) => {
   }
 });
 
+// Get session by ID
+router.get('/session/by-id/:sessionId', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const { token } = req.query;
+
+    // Get session
+    const sessionDoc = await db.collection('sessions').doc(sessionId).get();
+    
+    if (!sessionDoc.exists) {
+      return res.status(404).json({ error: 'Sessão não encontrada' });
+    }
+
+    const sessionData = sessionDoc.data();
+    
+    // Validate token
+    if (sessionData?.token !== token) {
+      return res.status(401).json({ error: 'Token inválido' });
+    }
+
+    // Get menu
+    const menuSnapshot = await db.collection('menuItems')
+      .where('restaurantId', '==', sessionData.restaurantId)
+      .where('available', '==', true)
+      .get();
+
+    const menu = menuSnapshot.docs.map((doc: any) => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    // Update last activity
+    await db.collection('sessions').doc(sessionId).update({
+      lastActivity: new Date()
+    });
+
+    res.json({
+      session: {
+        id: sessionDoc.id,
+        ...sessionData
+      },
+      menu
+    });
+  } catch (error) {
+    console.error('Error getting session by ID:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 export default router;

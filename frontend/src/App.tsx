@@ -1,6 +1,7 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { TableProvider } from './contexts/TableContext';
+import TableSessionPage from './pages/TableSessionPage';
 import MenuPage from './pages/MenuPage';
 import KitchenPanel from './pages/KitchenPanel';
 import AdminPanel from './pages/AdminPanel';
@@ -10,7 +11,8 @@ function App() {
     <Router>
       <TableProvider>
         <Routes>
-          <Route path="/m/:restaurantId/:tableId" element={<MenuPage />} />
+          <Route path="/m/:restaurantId/:tableId" element={<TableSessionPage />} />
+          <Route path="/menu" element={<MenuPage />} />
           <Route path="/kitchen" element={<KitchenPanel />} />
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/" element={

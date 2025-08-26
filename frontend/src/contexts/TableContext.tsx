@@ -9,6 +9,7 @@ interface TableContextType {
   removeFromCart: (menuItemId: string) => void;
   clearCart: () => void;
   loadSession: (restaurantId: string, tableId: string, token: string) => Promise<void>;
+  loadSessionById: (sessionId: string, token: string) => Promise<void>;
 }
 
 const TableContext = createContext<TableContextType | undefined>(undefined);
@@ -59,6 +60,17 @@ export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+  const loadSessionById = async (sessionId: string, token: string) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/session/by-id/${sessionId}?token=${token}`);
+      const data = await response.json();
+      setSession(data.session);
+      setMenu(data.menu);
+    } catch (error) {
+      console.error('Error loading session by ID:', error);
+    }
+  };
+
   return (
     <TableContext.Provider value={{
       session,
@@ -67,7 +79,8 @@ export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       addToCart,
       removeFromCart,
       clearCart,
-      loadSession
+      loadSession,
+      loadSessionById
     }}>
       {children}
     </TableContext.Provider>

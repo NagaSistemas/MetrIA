@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useTable } from '../contexts/TableContext';
 import { ShoppingCart, MessageCircle, Phone, Plus, Star, Clock, Users, ChefHat } from 'lucide-react';
 import AIChat from '../components/AIChat';
 
 const MenuPage: React.FC = () => {
-  const { restaurantId, tableId } = useParams<{ restaurantId: string; tableId: string }>();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get('t');
-  const { session, menu, cart, addToCart, loadSession } = useTable();
+  const sessionId = searchParams.get('sessionId');
+  const token = searchParams.get('token');
+  const { session, menu, cart, addToCart, loadSessionById } = useTable();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showAI, setShowAI] = useState(false);
-
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (restaurantId && tableId && token) {
-      loadSession(restaurantId, tableId, token).finally(() => setIsLoading(false));
+    if (sessionId && token) {
+      loadSessionById(sessionId, token).finally(() => setIsLoading(false));
     }
-  }, [restaurantId, tableId, token]);
+  }, [sessionId, token]);
 
   const categories = ['all', ...new Set(menu.map(item => item.category))];
   const filteredMenu = selectedCategory === 'all' 
@@ -258,7 +257,7 @@ const MenuPage: React.FC = () => {
               isOpen={showAI}
               onClose={() => setShowAI(false)}
               sessionId={session?.id || ''}
-              restaurantId={restaurantId || ''}
+              restaurantId={session?.restaurantId || ''}
             />
           </div>
         </div>
