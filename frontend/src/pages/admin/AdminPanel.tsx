@@ -255,7 +255,7 @@ const AdminPanel: React.FC = () => {
           </div>
           
           {/* Navigation Tabs */}
-          <div style={{
+          <div className="admin-tabs" style={{
             display: 'flex',
             justifyContent: 'center',
             gap: '8px',
@@ -652,7 +652,7 @@ const AdminPanel: React.FC = () => {
             </div>
 
             {/* Tables Grid */}
-            <div style={{
+            <div className="tables-grid" style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))',
               gap: '24px'
@@ -1822,6 +1822,26 @@ const AdminPanel: React.FC = () => {
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+          .tables-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+          .admin-header {
+            padding: 16px !important;
+          }
+          .admin-tabs {
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+          }
+          .admin-tab {
+            min-width: 120px !important;
+            padding: 12px 16px !important;
+            font-size: 14px !important;
+          }
         }
       `}</style>
     </div>

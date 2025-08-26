@@ -132,11 +132,11 @@ const MenuPage: React.FC = () => {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#0D0D0D', color: '#F5F5F5' }}>
-      {/* Header Luxuoso */}
+      {/* Header Responsivo */}
       <header style={{
         background: 'linear-gradient(135deg, #2C2C2C 0%, #0D0D0D 100%)',
         borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
-        padding: '24px',
+        padding: window.innerWidth < 768 ? '16px' : '24px',
         position: 'sticky',
         top: 0,
         zIndex: 50,
@@ -323,9 +323,9 @@ const MenuPage: React.FC = () => {
             )}
           </div>
         ) : (
-          <div style={{
+          <div className="menu-grid" style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
             gap: '32px'
           }}>
             {filteredMenu.map((item) => (
@@ -772,6 +772,30 @@ const MenuPage: React.FC = () => {
           40%, 43% { transform: translateY(-8px); }
           70% { transform: translateY(-4px); }
           90% { transform: translateY(-2px); }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+          .menu-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+          }
+          .header-content {
+            flex-wrap: wrap !important;
+            gap: 12px !important;
+          }
+          .logo-mobile {
+            height: 56px !important;
+          }
+          .button-mobile {
+            padding: 10px 16px !important;
+            font-size: 12px !important;
+          }
+        }
+        
+        /* Hide scrollbar */
+        .category-scroll::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
     </div>
