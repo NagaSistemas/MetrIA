@@ -71,28 +71,45 @@ router.get('/by-id/:sessionId', async (req, res) => {
     const { sessionId } = req.params;
     const { token } = req.query;
 
-    console.log('Looking for session:', sessionId, 'with token:', token);
+    console.log('=== SESSION LOOKUP ===');
+    console.log('SessionId:', sessionId);
+    console.log('Token:', token);
 
-    // Get session
+    // First check if session exists in sessions collection
     const sessionDoc = await db.collection('sessions').doc(sessionId).get();
+    console.log('Session exists in sessions collection:', sessionDoc.exists);
     
     if (!sessionDoc.exists) {
-      console.log('Session not found in database:', sessionId);
-      // Try to find session in tables collection
-      const tablesSnapshot = await db.collection('tables')
-        .where('currentSession.id', '==', sessionId)
-        .get();
+      console.log('Session not found, searching in tables...');
       
-      if (!tablesSnapshot.empty) {
-        const tableDoc = tablesSnapshot.docs[0];
+      // Search in tables collection
+      const tablesSnapshot = await db.collection('tables').get();
+      console.log('Total tables found:', tablesSnapshot.docs.length);
+      
+      let foundTable = null;
+      for (const tableDoc of tablesSnapshot.docs) {
         const tableData = tableDoc.data();
-        const sessionData = tableData.currentSession;
+        if (tableData.currentSession?.id === sessionId) {
+          foundTable = { doc: tableDoc, data: tableData };
+          break;
+        }
+      }
+      
+      if (foundTable) {
+        console.log('Found session in table:', foundTable.doc.id);
+        const sessionData = foundTable.data.currentSession;
         
-        // Create session document if it doesn't exist
+        // Validate token
+        if (sessionData.token !== token) {
+          console.log('Token mismatch:', sessionData.token, 'vs', token);
+          return res.status(401).json({ error: 'Token inválido' });
+        }
+        
+        // Create session document
         await db.collection('sessions').doc(sessionId).set(sessionData);
-        console.log('Created missing session document:', sessionId);
+        console.log('Created session document');
         
-        // Continue with the session data
+        // Get menu
         const menuSnapshot = await db.collection('menuItems')
           .where('available', '==', true)
           .get();
@@ -102,27 +119,34 @@ router.get('/by-id/:sessionId', async (req, res) => {
           ...doc.data()
         }));
         
+        console.log('Returning session with', menu.length, 'menu items');
+        
         return res.json({
           session: {
             id: sessionId,
             ...sessionData,
-            tableNumber: tableData?.number
+            tableNumber: foundTable.data.number
           },
           menu
         });
       }
       
+      console.log('Session not found anywhere');
       return res.status(404).json({ error: 'Sessão não encontrada' });
     }
     
-    console.log('Session found:', sessionDoc.data());
+    console.log('Session found in sessions collection');
 
     const sessionData = sessionDoc.data();
+    console.log('Session data:', sessionData);
     
     // Validate token
     if (sessionData?.token !== token) {
+      console.log('Token validation failed');
       return res.status(401).json({ error: 'Token inválido' });
     }
+    
+    console.log('Token validated successfully');
 
     // Get menu
     const menuSnapshot = await db.collection('menuItems')

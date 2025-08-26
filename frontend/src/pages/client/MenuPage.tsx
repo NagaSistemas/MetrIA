@@ -774,22 +774,81 @@ const MenuPage: React.FC = () => {
           90% { transform: translateY(-2px); }
         }
         
-        /* Responsive Styles */
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
+          * {
+            box-sizing: border-box !important;
+          }
+          
+          body {
+            overflow-x: hidden !important;
+          }
+          
           .menu-grid {
             grid-template-columns: 1fr !important;
-            gap: 20px !important;
+            gap: 16px !important;
+            margin: 0 !important;
           }
-          .header-content {
-            flex-wrap: wrap !important;
+          
+          header {
+            padding: 12px 16px !important;
+          }
+          
+          main {
+            padding: 16px 12px !important;
+            padding-bottom: 120px !important;
+          }
+          
+          /* Card responsiveness */
+          [style*="borderRadius"] {
+            border-radius: 12px !important;
+          }
+          
+          /* Button responsiveness */
+          button {
+            min-height: 44px !important;
+            font-size: 14px !important;
+          }
+          
+          /* Input responsiveness */
+          input {
+            font-size: 16px !important;
+            padding: 12px !important;
+          }
+          
+          /* Grid responsiveness */
+          [style*="grid"] {
+            grid-template-columns: 1fr !important;
             gap: 12px !important;
           }
-          .logo-mobile {
-            height: 56px !important;
+          
+          /* Flex responsiveness */
+          [style*="flex"][style*="gap"] {
+            flex-wrap: wrap !important;
+            gap: 8px !important;
           }
-          .button-mobile {
-            padding: 10px 16px !important;
-            font-size: 12px !important;
+          
+          /* Text responsiveness */
+          [style*="fontSize: '32px'"] {
+            font-size: 24px !important;
+          }
+          
+          [style*="fontSize: '24px'"] {
+            font-size: 20px !important;
+          }
+          
+          /* Logo responsiveness */
+          img[alt*="Logo"] {
+            height: 48px !important;
+          }
+          
+          /* Cart responsiveness */
+          [style*="position: 'fixed'"][style*="bottom"] {
+            padding: 12px 16px !important;
+            left: 8px !important;
+            right: 8px !important;
+            bottom: 8px !important;
+            border-radius: 12px !important;
           }
         }
         

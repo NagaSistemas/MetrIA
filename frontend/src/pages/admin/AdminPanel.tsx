@@ -1824,7 +1824,7 @@ const AdminPanel: React.FC = () => {
           50% { opacity: 0.5; }
         }
         
-        /* Responsive Styles */
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
           .tables-grid {
             grid-template-columns: 1fr !important;
@@ -1834,13 +1834,38 @@ const AdminPanel: React.FC = () => {
             padding: 16px !important;
           }
           .admin-tabs {
-            flex-wrap: wrap !important;
+            flex-direction: column !important;
             gap: 8px !important;
           }
           .admin-tab {
-            min-width: 120px !important;
-            padding: 12px 16px !important;
-            font-size: 14px !important;
+            width: 100% !important;
+            padding: 16px !important;
+            font-size: 16px !important;
+            text-align: center !important;
+          }
+          .mobile-card {
+            margin: 0 8px !important;
+            padding: 16px !important;
+          }
+          .mobile-button {
+            width: 100% !important;
+            padding: 14px !important;
+            font-size: 16px !important;
+            margin-bottom: 8px !important;
+          }
+          .mobile-input {
+            width: 100% !important;
+            padding: 12px !important;
+            font-size: 16px !important;
+            margin-bottom: 12px !important;
+          }
+          .mobile-grid {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+          }
+          .mobile-flex {
+            flex-direction: column !important;
+            gap: 12px !important;
           }
         }
       `}</style>
