@@ -391,12 +391,12 @@ const LoginPage: React.FC = () => {
           }
           
           .login-logo {
-            height: 100px !important;
-            margin-bottom: 16px !important;
+            height: 200px !important;
+            margin-bottom: 20px !important;
           }
           
           .login-title {
-            font-size: 26px !important;
+            font-size: 20px !important;
             margin-bottom: 8px !important;
             line-height: 1.2 !important;
           }
@@ -424,7 +424,11 @@ const LoginPage: React.FC = () => {
           }
           
           .password-toggle {
-            right: 16px !important;
+            right: 12px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            z-index: 10 !important;
+            position: absolute !important;
           }
           
           .checkbox-container {
@@ -467,11 +471,11 @@ const LoginPage: React.FC = () => {
           }
           
           .login-logo {
-            height: 90px !important;
+            height: 180px !important;
           }
           
           .login-title {
-            font-size: 24px !important;
+            font-size: 18px !important;
           }
           
           .login-input {
