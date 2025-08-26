@@ -375,7 +375,6 @@ router.delete('/categories/:id', async (req, res) => {
 router.get('/menu-items', async (req, res) => {
   try {
     const menuItemsSnapshot = await db.collection('menuItems')
-      .orderBy('category', 'asc')
       .orderBy('name', 'asc')
       .get();
     
