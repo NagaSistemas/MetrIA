@@ -33,10 +33,10 @@ const MenuPage: React.FC = () => {
     }
   }, [sessionId, token]);
 
-  const categories = ['all', ...new Set(menu.map(item => item.category))];
+  const categories = ['all', ...new Set((menu || []).map(item => item.category))];
   let filteredMenu = selectedCategory === 'all' 
-    ? menu 
-    : menu.filter(item => item.category === selectedCategory);
+    ? (menu || []) 
+    : (menu || []).filter(item => item.category === selectedCategory);
     
   if (searchQuery) {
     filteredMenu = filteredMenu.filter(item => 
@@ -45,8 +45,8 @@ const MenuPage: React.FC = () => {
     );
   }
 
-  const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartTotal = (cart || []).reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const cartItemCount = (cart || []).reduce((sum, item) => sum + item.quantity, 0);
 
   const handleCallWaiter = async () => {
     try {

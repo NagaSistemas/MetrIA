@@ -64,7 +64,7 @@ router.get('/:restaurantId/:tableId', async (req, res) => {
 });
 
 // Get session by ID
-router.get('/session/by-id/:sessionId', async (req, res) => {
+router.get('/by-id/:sessionId', async (req, res) => {
   try {
     const { sessionId } = req.params;
     const { token } = req.query;
@@ -98,10 +98,15 @@ router.get('/session/by-id/:sessionId', async (req, res) => {
       lastActivity: new Date()
     });
 
+    // Get table info for table number
+    const tableDoc = await db.collection('tables').doc(sessionData.tableId).get();
+    const tableData = tableDoc.data();
+    
     res.json({
       session: {
         id: sessionDoc.id,
-        ...sessionData
+        ...sessionData,
+        tableNumber: tableData?.number
       },
       menu
     });
