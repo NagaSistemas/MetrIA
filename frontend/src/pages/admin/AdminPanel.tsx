@@ -10,7 +10,9 @@ const AdminPanel: React.FC = () => {
   const [tables, setTables] = useState<Table[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'tables' | 'menu' | 'ai' | 'orders'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'tables' | 'menu' | 'ai' | 'orders'>(() => {
+    return (localStorage.getItem('adminActiveTab') as any) || 'dashboard';
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [editingTable, setEditingTable] = useState<Table | null>(null);
   const [editTableNumber, setEditTableNumber] = useState('');
@@ -82,29 +84,13 @@ const AdminPanel: React.FC = () => {
       // Verificar se há novos pedidos
       const newOrdersCount = data.length - orders.length;
       if (newOrdersCount > 0 && orders.length > 0) {
-        // Mostrar notificação de novo pedido
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          background: linear-gradient(135deg, #10b981, #059669);
-          color: white;
-          padding: 16px 24px;
-          border-radius: 12px;
-          box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-          z-index: 9999;
-          font-weight: 600;
-          animation: slideIn 0.3s ease;
-        `;
-        notification.innerHTML = `🔔 ${newOrdersCount} novo${newOrdersCount > 1 ? 's' : ''} pedido${newOrdersCount > 1 ? 's' : ''}!`;
-        document.body.appendChild(notification);
+        // Salvar aba atual antes do refresh
+        localStorage.setItem('adminActiveTab', activeTab);
         
+        // Refresh automático da página
         setTimeout(() => {
-          if (document.body.contains(notification)) {
-            document.body.removeChild(notification);
-          }
-        }, 4000);
+          window.location.reload();
+        }, 1000);
       }
       
       setOrders(data);
@@ -330,7 +316,10 @@ const AdminPanel: React.FC = () => {
             {tabs.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
-                onClick={() => setActiveTab(id as any)}
+                onClick={() => {
+                  setActiveTab(id as any);
+                  localStorage.setItem('adminActiveTab', id);
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
