@@ -82,7 +82,6 @@ router.get('/session/by-id/:sessionId', async (req, res) => {
 
     // Get menu
     const menuSnapshot = await db.collection('menuItems')
-      .where('restaurantId', '==', sessionData.restaurantId)
       .where('available', '==', true)
       .get();
 
