@@ -19,7 +19,7 @@ router.get('/orders', async (req, res) => {
     res.json(orders);
   } catch (error) {
     console.error('Error fetching orders:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.json([]);
   }
 });
 
@@ -57,7 +57,7 @@ router.get('/waiter-calls', async (req, res) => {
     res.json(calls);
   } catch (error) {
     console.error('Error fetching waiter calls:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.json([]);
   }
 });
 

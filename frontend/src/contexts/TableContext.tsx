@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { TableSession, MenuItem, OrderItem } from '../../../shared/types';
+import React, { createContext, useContext, useState } from 'react';
+import type { TableSession, MenuItem, OrderItem } from '../../../shared/types';
 
 interface TableContextType {
   session: TableSession | null;
