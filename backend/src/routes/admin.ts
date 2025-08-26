@@ -20,7 +20,7 @@ router.get('/restaurant', async (req, res) => {
 router.get('/tables', async (req, res) => {
   try {
     const tablesSnapshot = await db.collection('tables').orderBy('number', 'asc').get();
-    const tables = tablesSnapshot.docs.map(doc => ({
+    const tables = tablesSnapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data()
     }));
@@ -98,7 +98,7 @@ router.get('/orders', async (req, res) => {
       .limit(100)
       .get();
 
-    const orders = ordersSnapshot.docs.map(doc => ({
+    const orders = ordersSnapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data()
     }));

@@ -11,7 +11,7 @@ router.get('/orders', async (req, res) => {
       .orderBy('createdAt', 'asc')
       .get();
 
-    const orders = ordersSnapshot.docs.map(doc => ({
+    const orders = ordersSnapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data()
     }));
@@ -49,7 +49,7 @@ router.get('/waiter-calls', async (req, res) => {
       .orderBy('createdAt', 'desc')
       .get();
 
-    const calls = callsSnapshot.docs.map(doc => ({
+    const calls = callsSnapshot.docs.map((doc: any) => ({
       id: doc.id,
       ...doc.data()
     }));
