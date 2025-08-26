@@ -86,7 +86,7 @@ const TableSessionPage: React.FC = () => {
     switch (status) {
       case 'OPEN':
         return { 
-          label: 'Mesa Disponível', 
+          label: `Mesa ${session?.tableNumber} Disponível`, 
           color: 'text-green-400', 
           bgColor: 'bg-green-500/20 border-green-500/30',
           icon: CheckCircle,
@@ -94,7 +94,7 @@ const TableSessionPage: React.FC = () => {
         };
       case 'ORDERING':
         return { 
-          label: 'Fazendo Pedido', 
+          label: `Mesa ${session?.tableNumber} - Fazendo Pedido`, 
           color: 'text-blue-400', 
           bgColor: 'bg-blue-500/20 border-blue-500/30',
           icon: Clock,
@@ -102,7 +102,7 @@ const TableSessionPage: React.FC = () => {
         };
       case 'PAYING':
         return { 
-          label: 'Processando Pagamento', 
+          label: `Mesa ${session?.tableNumber} - Processando Pagamento`, 
           color: 'text-yellow-400', 
           bgColor: 'bg-yellow-500/20 border-yellow-500/30',
           icon: Clock,
@@ -110,7 +110,7 @@ const TableSessionPage: React.FC = () => {
         };
       case 'PAID':
         return { 
-          label: 'Pedido Confirmado', 
+          label: `Mesa ${session?.tableNumber} - Pedido Confirmado`, 
           color: 'text-gold', 
           bgColor: 'bg-gold/20 border-gold/30',
           icon: ChefHat,
@@ -118,7 +118,7 @@ const TableSessionPage: React.FC = () => {
         };
       default:
         return { 
-          label: 'Mesa Fechada', 
+          label: `Mesa ${session?.tableNumber} - Fechada`, 
           color: 'text-red-400', 
           bgColor: 'bg-red-500/20 border-red-500/30',
           icon: AlertCircle,
@@ -308,30 +308,16 @@ const TableSessionPage: React.FC = () => {
       <div style={{ width: '100%', maxWidth: '500px' }}>
         {/* Header Profissional */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            gap: '16px',
-            marginBottom: '16px'
-          }}>
-            <img 
-              src="/Logo.png" 
-              alt="MetrIA Logo" 
-              style={{ 
-                height: '140px', 
-                width: 'auto',
-                filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4))'
-              }} 
-            />
-            <span style={{
-              fontFamily: 'Cinzel, serif',
-              color: '#D4AF37',
-              fontSize: '36px',
-              fontWeight: '700',
-              textShadow: '0 2px 10px rgba(212, 175, 55, 0.3)'
-            }}>Mesa {session.tableNumber}</span>
-          </div>
+          <img 
+            src="/Logo.png" 
+            alt="MetrIA Logo" 
+            style={{ 
+              height: '140px', 
+              width: 'auto',
+              filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4))',
+              marginBottom: '24px'
+            }} 
+          />
         </div>
 
         {/* Card Principal */}
