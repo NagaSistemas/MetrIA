@@ -281,6 +281,7 @@ const MenuManagement: React.FC = () => {
   }
 
   return (
+    <>
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       {/* Professional Header */}
       <div style={{
@@ -1443,6 +1444,7 @@ const MenuManagement: React.FC = () => {
         }
       }
     `}</style>
+    </>
   );
 };
 
