@@ -1163,36 +1163,6 @@ const AdminPanel: React.FC = () => {
         {/* Orders Management */}
         {activeTab === 'orders' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', position: 'relative' }}>
-            {/* Restaurant Mode Toggle */}
-            <button
-              onClick={() => setRestaurantMode(!restaurantMode)}
-              style={{
-                position: 'fixed',
-                top: '20px',
-                right: '20px',
-                background: restaurantMode ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #10b981, #059669)',
-                color: '#F5F5F5',
-                border: 'none',
-                padding: '12px 20px',
-                borderRadius: '25px',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                zIndex: 1000,
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
-              }}
-            >
-              {restaurantMode ? '🏠 Desativar Modo Restaurante' : '🍳 Ativar Modo Restaurante'}
-            </button>
             {/* Professional Header */}
             <div style={{
               background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
@@ -1417,6 +1387,37 @@ const AdminPanel: React.FC = () => {
                 ))
               )}
             </div>
+            
+            {/* Restaurant Mode Toggle - Fixed at bottom */}
+            <button
+              onClick={() => setRestaurantMode(!restaurantMode)}
+              style={{
+                position: 'fixed',
+                bottom: '20px',
+                right: '20px',
+                background: restaurantMode ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #10b981, #059669)',
+                color: '#F5F5F5',
+                border: 'none',
+                padding: '12px 20px',
+                borderRadius: '25px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                zIndex: 1000,
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+              }}
+            >
+              {restaurantMode ? '🏠 Desativar Modo Restaurante' : '🍳 Ativar Modo Restaurante'}
+            </button>
           </div>
         )}
       </main>

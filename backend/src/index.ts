@@ -28,7 +28,8 @@ if (!fs.existsSync(uploadsDir)) {
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(uploadsDir));
 
 // Routes
@@ -39,6 +40,22 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/call-waiter', waiterRoutes);
 app.use('/api/payment', paymentRoutes);
 
+
+// Debug route
+app.get('/api/debug', (req, res) => {
+  res.json({ 
+    status: 'API OK', 
+    timestamp: new Date().toISOString(),
+    routes: {
+      session: '/api/session',
+      kitchen: '/api/kitchen', 
+      admin: '/api/admin',
+      ai: '/api/ai',
+      waiter: '/api/call-waiter',
+      payment: '/api/payment'
+    }
+  });
+});
 
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
