@@ -46,7 +46,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div style={{
+    <div className="login-container" style={{
       minHeight: '100vh',
       backgroundColor: '#0D0D0D',
       display: 'flex',
@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
       justifyContent: 'center',
       padding: '20px'
     }}>
-      <div style={{
+      <div className="login-card" style={{
         background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
         border: '1px solid rgba(212, 175, 55, 0.3)',
         borderRadius: '20px',
@@ -68,6 +68,7 @@ const LoginPage: React.FC = () => {
           <img 
             src="/Logo.png" 
             alt="MetrIA Logo" 
+            className="login-logo"
             style={{ 
               height: '80px', 
               width: 'auto',
@@ -75,7 +76,7 @@ const LoginPage: React.FC = () => {
               marginBottom: '16px'
             }} 
           />
-          <h1 style={{
+          <h1 className="login-title" style={{
             fontFamily: 'Cinzel, serif',
             fontSize: '28px',
             fontWeight: '700',
@@ -85,7 +86,7 @@ const LoginPage: React.FC = () => {
           }}>
             Painel Administrativo
           </h1>
-          <p style={{
+          <p className="login-subtitle" style={{
             color: '#F5F5F5',
             opacity: 0.7,
             fontSize: '14px',
@@ -124,6 +125,7 @@ const LoginPage: React.FC = () => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                className="login-input"
                 style={{
                   width: '100%',
                   padding: '16px 16px 16px 48px',
@@ -176,6 +178,7 @@ const LoginPage: React.FC = () => {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="login-input"
                 style={{
                   width: '100%',
                   padding: '16px 48px 16px 48px',
@@ -276,6 +279,7 @@ const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
+            className="login-button"
             style={{
               width: '100%',
               background: isLoading 
@@ -329,7 +333,7 @@ const LoginPage: React.FC = () => {
         </form>
 
         {/* Demo Info */}
-        <div style={{
+        <div className="demo-info" style={{
           marginTop: '32px',
           padding: '16px',
           backgroundColor: 'rgba(212, 175, 55, 0.1)',
@@ -361,6 +365,65 @@ const LoginPage: React.FC = () => {
         @keyframes spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+          .login-container {
+            padding: 16px !important;
+            margin: 0 !important;
+          }
+          
+          .login-card {
+            padding: 32px 24px !important;
+            margin: 0 !important;
+            border-radius: 16px !important;
+            max-width: none !important;
+            width: 100% !important;
+          }
+          
+          .login-logo {
+            height: 96px !important;
+            margin-bottom: 16px !important;
+          }
+          
+          .login-title {
+            font-size: 24px !important;
+            margin-bottom: 6px !important;
+          }
+          
+          .login-subtitle {
+            font-size: 13px !important;
+          }
+          
+          .login-input {
+            padding: 14px 14px 14px 44px !important;
+            font-size: 16px !important;
+          }
+          
+          .login-button {
+            padding: 16px !important;
+            font-size: 16px !important;
+          }
+          
+          .demo-info {
+            padding: 12px !important;
+            margin-top: 24px !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .login-container {
+            padding: 12px !important;
+          }
+          
+          .login-card {
+            padding: 24px 20px !important;
+          }
+          
+          .login-title {
+            font-size: 22px !important;
+          }
         }
       `}</style>
     </div>

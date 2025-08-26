@@ -1420,7 +1420,7 @@ const AdminPanel: React.FC = () => {
                 gridTemplateColumns: restaurantMode ? 'repeat(auto-fit, minmax(500px, 1fr))' : 'none',
                 flexDirection: restaurantMode ? 'initial' : 'column',
                 gap: restaurantMode ? '32px' : '16px',
-                marginTop: restaurantMode ? '-250px' : '0',
+                marginTop: restaurantMode ? '-300px' : '0',
                 transition: 'all 0.5s ease 0.2s',
                 padding: restaurantMode ? '24px' : '0',
                 maxWidth: restaurantMode ? 'none' : '1400px',
@@ -1464,6 +1464,26 @@ const AdminPanel: React.FC = () => {
               ) : (
                 orders
                   .filter(order => statusFilter === 'all' || order.status === statusFilter)
+                  .sort((a, b) => {
+                    // Ordenação por prioridade de status e depois por data de criação
+                    const statusPriority = {
+                      'PENDING': 1,
+                      'PREPARING': 2,
+                      'READY': 3,
+                      'DELIVERED': 4,
+                      'CANCELLED': 5
+                    };
+                    
+                    const priorityA = statusPriority[a.status as keyof typeof statusPriority] || 999;
+                    const priorityB = statusPriority[b.status as keyof typeof statusPriority] || 999;
+                    
+                    if (priorityA !== priorityB) {
+                      return priorityA - priorityB;
+                    }
+                    
+                    // Se mesmo status, ordenar por data de criação (mais antigo primeiro)
+                    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+                  })
                   .map(order => (
                     <div 
                       key={order.id}
