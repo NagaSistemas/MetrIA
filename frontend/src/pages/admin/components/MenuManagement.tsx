@@ -73,20 +73,28 @@ const MenuManagement: React.FC = () => {
   const fetchCategories = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/categories`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-      setCategories(data);
+      setCategories(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching categories:', error);
+      setCategories([]);
     }
   };
 
   const fetchMenuItems = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/menu-items`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-      setMenuItems(data);
+      setMenuItems(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching menu items:', error);
+      setMenuItems([]);
     }
   };
 
