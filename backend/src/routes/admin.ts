@@ -66,7 +66,7 @@ router.post('/tables/generate', async (req, res) => {
     
     for (let i = 1; i <= quantity; i++) {
       const tableId = uuidv4();
-      const qrCode = `https://app.seudominio.com/m/${restaurantId}/${tableId}?t=`;
+      const qrCode = `https://metria.nagasistemas.com/m/${restaurantId}/${tableId}?t=`;
       
       const tableRef = db.collection('tables').doc(tableId);
       batch.set(tableRef, {
