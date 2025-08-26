@@ -36,7 +36,8 @@ router.get('/:restaurantId/:tableId', async (req, res) => {
         token: sessionToken,
         createdAt: new Date(),
         orders: [],
-        waiterCalls: []
+        waiterCalls: [],
+        tableNumber: tableData?.number
       };
 
       await db.collection('tables').doc(tableId).update({
@@ -44,6 +45,9 @@ router.get('/:restaurantId/:tableId', async (req, res) => {
       });
 
       await db.collection('sessions').doc(sessionId).set(newSession);
+      
+      // Update tableData with new session
+      tableData.currentSession = newSession;
     }
 
     // Get restaurant menu
@@ -69,12 +73,17 @@ router.get('/by-id/:sessionId', async (req, res) => {
     const { sessionId } = req.params;
     const { token } = req.query;
 
+    console.log('Looking for session:', sessionId, 'with token:', token);
+
     // Get session
     const sessionDoc = await db.collection('sessions').doc(sessionId).get();
     
     if (!sessionDoc.exists) {
+      console.log('Session not found in database:', sessionId);
       return res.status(404).json({ error: 'Sessão não encontrada' });
     }
+    
+    console.log('Session found:', sessionDoc.data());
 
     const sessionData = sessionDoc.data();
     
