@@ -62,12 +62,22 @@ export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const loadSessionById = async (sessionId: string, token: string) => {
     try {
+      console.log('Loading session by ID:', sessionId, token);
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/session/by-id/${sessionId}?token=${token}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Session load failed:', response.status, errorData);
+        throw new Error(errorData.error || 'Failed to load session');
+      }
+      
       const data = await response.json();
+      console.log('Session loaded successfully:', data);
       setSession(data.session);
-      setMenu(data.menu);
+      setMenu(data.menu || []);
     } catch (error) {
       console.error('Error loading session by ID:', error);
+      // Don't set session to null, keep it as is for debugging
     }
   };
 
