@@ -1,29 +1,13 @@
 import { Router } from 'express';
-import { db } from '../config/firebase';
+import { db, bucket } from '../config/firebase';
 import { v4 as uuidv4 } from 'uuid';
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
 
 const router = Router();
 
-// Configure multer for image upload
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadsDir = path.join(__dirname, '../../uploads');
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'menu-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
+// Configure multer for memory storage (Firebase upload)
 const upload = multer({ 
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
@@ -536,22 +520,44 @@ router.delete('/menu-items/:id', async (req, res) => {
 
 // IMAGE UPLOAD ROUTE
 
-// Upload image
+// Upload image to Firebase Storage
 router.post('/upload-image', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No image file provided' });
     }
 
-    // In production, you would upload to cloud storage (AWS S3, Google Cloud Storage, etc.)
-    // For now, we'll return a local URL
-    const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    const fileName = `menu-images/${Date.now()}-${req.file.originalname}`;
+    const file = bucket.file(fileName);
     
-    res.json({ 
-      success: true, 
-      imageUrl,
-      filename: req.file.filename 
+    const stream = file.createWriteStream({
+      metadata: {
+        contentType: req.file.mimetype,
+      },
     });
+
+    stream.on('error', (error) => {
+      console.error('Upload error:', error);
+      res.status(500).json({ error: 'Upload failed' });
+    });
+
+    stream.on('finish', async () => {
+      try {
+        await file.makePublic();
+        const imageUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+        
+        res.json({ 
+          success: true, 
+          imageUrl,
+          filename: fileName 
+        });
+      } catch (error) {
+        console.error('Error making file public:', error);
+        res.status(500).json({ error: 'Error making file public' });
+      }
+    });
+
+    stream.end(req.file.buffer);
   } catch (error) {
     console.error('Error uploading image:', error);
     res.status(500).json({ error: 'Internal server error' });

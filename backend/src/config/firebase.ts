@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 
 let db: any;
+let bucket: any;
 
 export const initializeFirebase = () => {
   if (!admin.apps.length) {
@@ -18,11 +19,13 @@ export const initializeFirebase = () => {
         clientEmail,
         privateKey
       }),
-      databaseURL: `https://${projectId}.firebaseio.com`
+      databaseURL: `https://${projectId}.firebaseio.com`,
+      storageBucket: `${projectId}.appspot.com`
     });
   }
   db = admin.firestore();
+  bucket = admin.storage().bucket();
 };
 
-export { db };
+export { db, bucket };
 export default admin;

@@ -23,12 +23,14 @@ router.get('/:restaurantId/:tableId', async (req, res) => {
       return res.status(401).json({ error: 'Invalid session token' });
     }
 
-    // Create new session if none exists
-    if (!tableData?.currentSession || tableData.currentSession.status === 'CLOSED') {
+    let currentSession = tableData?.currentSession;
+    
+    // Create new session if none exists or is closed
+    if (!currentSession || currentSession.status === 'CLOSED') {
       const sessionId = uuidv4();
       const sessionToken = uuidv4();
       
-      const newSession = {
+      currentSession = {
         id: sessionId,
         tableId,
         restaurantId,
@@ -40,14 +42,15 @@ router.get('/:restaurantId/:tableId', async (req, res) => {
         tableNumber: tableData?.number
       };
 
-      await db.collection('tables').doc(tableId).update({
-        currentSession: newSession
-      });
-
-      await db.collection('sessions').doc(sessionId).set(newSession);
+      // Save to both collections
+      await Promise.all([
+        db.collection('tables').doc(tableId).update({
+          currentSession: currentSession
+        }),
+        db.collection('sessions').doc(sessionId).set(currentSession)
+      ]);
       
-      // Update tableData with new session
-      tableData.currentSession = newSession;
+      console.log('Created new session:', sessionId);
     }
 
     // Get restaurant menu
@@ -55,10 +58,7 @@ router.get('/:restaurantId/:tableId', async (req, res) => {
     const restaurantData = restaurantDoc.data();
 
     res.json({
-      session: {
-        ...tableData?.currentSession,
-        tableNumber: tableData?.number
-      },
+      session: currentSession,
       menu: restaurantData?.menu || []
     });
   } catch (error) {
