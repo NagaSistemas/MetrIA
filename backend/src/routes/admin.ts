@@ -56,6 +56,30 @@ router.get('/tables', async (req, res) => {
   }
 });
 
+// Update existing tables with correct domain
+router.post('/tables/update-domains', async (req, res) => {
+  try {
+    const tablesSnapshot = await db.collection('tables').get();
+    const batch = db.batch();
+    
+    tablesSnapshot.docs.forEach(doc => {
+      const tableData = doc.data();
+      const newQrCode = `https://metria.nagasistemas.com/m/${tableData.restaurantId}/${doc.id}?t=`;
+      
+      batch.update(doc.ref, {
+        qrCode: newQrCode,
+        updatedAt: new Date()
+      });
+    });
+    
+    await batch.commit();
+    res.json({ success: true, message: `Updated ${tablesSnapshot.docs.length} tables with correct domain` });
+  } catch (error) {
+    console.error('Error updating table domains:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Generate tables
 router.post('/tables/generate', async (req, res) => {
   try {
