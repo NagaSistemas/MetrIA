@@ -78,6 +78,40 @@ router.get('/by-id/:sessionId', async (req, res) => {
     
     if (!sessionDoc.exists) {
       console.log('Session not found in database:', sessionId);
+      // Try to find session in tables collection
+      const tablesSnapshot = await db.collection('tables')
+        .where('currentSession.id', '==', sessionId)
+        .get();
+      
+      if (!tablesSnapshot.empty) {
+        const tableDoc = tablesSnapshot.docs[0];
+        const tableData = tableDoc.data();
+        const sessionData = tableData.currentSession;
+        
+        // Create session document if it doesn't exist
+        await db.collection('sessions').doc(sessionId).set(sessionData);
+        console.log('Created missing session document:', sessionId);
+        
+        // Continue with the session data
+        const menuSnapshot = await db.collection('menuItems')
+          .where('available', '==', true)
+          .get();
+
+        const menu = menuSnapshot.docs.map((doc: any) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        return res.json({
+          session: {
+            id: sessionId,
+            ...sessionData,
+            tableNumber: tableData?.number
+          },
+          menu
+        });
+      }
+      
       return res.status(404).json({ error: 'Sessão não encontrada' });
     }
     
