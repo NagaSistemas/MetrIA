@@ -9,16 +9,20 @@ router.post('/pix', async (req, res) => {
   try {
     const { sessionId, amount, items } = req.body;
 
-    // Criar pedido
+    // Criar pedido simplificado
     const orderId = uuidv4();
     const order = {
       id: orderId,
       sessionId,
-      items,
+      items: items.map((item: any) => ({
+        menuItemId: item.menuItemId,
+        quantity: item.quantity,
+        price: item.price,
+        name: item.name
+      })),
       total: amount,
       status: 'PENDING',
       paymentStatus: 'PAID',
-      paymentId: uuidv4(),
       isExtra: false,
       createdAt: new Date()
     };
@@ -26,17 +30,7 @@ router.post('/pix', async (req, res) => {
     // Salvar pedido
     await db.collection('orders').doc(orderId).set(order);
 
-    // Atualizar sessão
-    await db.collection('sessions').doc(sessionId).update({
-      status: 'PAID',
-      orders: [orderId]
-    });
-
-    res.json({
-      success: true,
-      orderId,
-      paymentId: order.paymentId
-    });
+    res.json({ success: true, orderId });
   } catch (error) {
     console.error('Error processing payment:', error);
     res.status(500).json({ error: 'Payment processing failed' });
