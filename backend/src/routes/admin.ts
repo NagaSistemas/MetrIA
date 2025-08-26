@@ -536,7 +536,7 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
       },
     });
 
-    stream.on('error', (error) => {
+    stream.on('error', (error: any) => {
       console.error('Upload error:', error);
       res.status(500).json({ error: 'Upload failed' });
     });
@@ -551,7 +551,7 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
           imageUrl,
           filename: fileName 
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error making file public:', error);
         res.status(500).json({ error: 'Error making file public' });
       }
