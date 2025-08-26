@@ -75,6 +75,106 @@ Use emojis moderadamente e seja natural na conversa. Sempre mencione preços qua
 
     await db.collection('restaurants').doc(restaurantId).set(restaurant);
 
+    // Create sample categories
+    const categories = [
+      { id: uuidv4(), name: 'Entradas', icon: '🥗', createdAt: new Date() },
+      { id: uuidv4(), name: 'Pratos Principais', icon: '🍖', createdAt: new Date() },
+      { id: uuidv4(), name: 'Massas', icon: '🍝', createdAt: new Date() },
+      { id: uuidv4(), name: 'Pizzas', icon: '🍕', createdAt: new Date() },
+      { id: uuidv4(), name: 'Sobremesas', icon: '🍰', createdAt: new Date() },
+      { id: uuidv4(), name: 'Bebidas', icon: '🍷', createdAt: new Date() }
+    ];
+
+    for (const category of categories) {
+      await db.collection('categories').doc(category.id).set(category);
+    }
+
+    // Create sample menu items
+    const menuItems = [
+      {
+        id: uuidv4(),
+        name: 'Bruschetta Italiana',
+        description: 'Pão italiano tostado com tomate, manjericão e azeite extra virgem',
+        price: 18.90,
+        category: 'Entradas',
+        image: '',
+        ingredients: 'Pão italiano, tomate, manjericão, alho, azeite extra virgem',
+        preparation: 'Tostar o pão, esfregar com alho e cobrir com a mistura de tomate',
+        allergens: ['Glúten'],
+        available: true,
+        createdAt: new Date()
+      },
+      {
+        id: uuidv4(),
+        name: 'Filé Mignon Grelhado',
+        description: 'Filé mignon grelhado com batatas rústicas e legumes salteados',
+        price: 65.90,
+        category: 'Pratos Principais',
+        image: '',
+        ingredients: 'Filé mignon, batatas, brócolis, cenoura, abobrinha',
+        preparation: 'Grelhar a carne no ponto desejado, saltear os legumes',
+        allergens: [],
+        available: true,
+        createdAt: new Date()
+      },
+      {
+        id: uuidv4(),
+        name: 'Spaghetti Carbonara',
+        description: 'Massa italiana com molho cremoso, bacon e parmesão',
+        price: 42.50,
+        category: 'Massas',
+        image: '',
+        ingredients: 'Spaghetti, bacon, ovos, parmesão, pimenta do reino',
+        preparation: 'Cozinhar a massa al dente, misturar com molho cremoso',
+        allergens: ['Glúten', 'Lactose', 'Ovos'],
+        available: true,
+        createdAt: new Date()
+      },
+      {
+        id: uuidv4(),
+        name: 'Pizza Quattro Stagioni',
+        description: 'Pizza com quatro sabores: presunto, cogumelos, alcachofra e azeitonas',
+        price: 48.00,
+        category: 'Pizzas',
+        image: '',
+        ingredients: 'Massa de pizza, molho de tomate, mussarela, presunto, cogumelos, alcachofra, azeitonas',
+        preparation: 'Assar em forno a lenha por 8-10 minutos',
+        allergens: ['Glúten', 'Lactose'],
+        available: true,
+        createdAt: new Date()
+      },
+      {
+        id: uuidv4(),
+        name: 'Tiramisu',
+        description: 'Sobremesa italiana com café, mascarpone e cacau',
+        price: 16.90,
+        category: 'Sobremesas',
+        image: '',
+        ingredients: 'Biscoito champagne, café, mascarpone, ovos, açúcar, cacau',
+        preparation: 'Montar em camadas e refrigerar por 4 horas',
+        allergens: ['Glúten', 'Lactose', 'Ovos'],
+        available: true,
+        createdAt: new Date()
+      },
+      {
+        id: uuidv4(),
+        name: 'Vinho Tinto Reserva',
+        description: 'Vinho tinto seco, corpo médio, ideal para carnes',
+        price: 85.00,
+        category: 'Bebidas',
+        image: '',
+        ingredients: 'Uvas tintas selecionadas',
+        preparation: 'Servir à temperatura ambiente',
+        allergens: ['Sulfitos'],
+        available: true,
+        createdAt: new Date()
+      }
+    ];
+
+    for (const item of menuItems) {
+      await db.collection('menuItems').doc(item.id).set(item);
+    }
+
     // Create sample tables
     const tables = [];
     for (let i = 1; i <= 10; i++) {
@@ -94,8 +194,9 @@ Use emojis moderadamente e seja natural na conversa. Sempre mencione preços qua
 
     console.log('✅ Database seeded successfully!');
     console.log(`Created restaurant: ${restaurant.name}`);
+    console.log(`Created ${categories.length} categories`);
+    console.log(`Created ${menuItems.length} menu items`);
     console.log(`Created ${tables.length} tables`);
-    console.log(`Created ${restaurant.menu.length} menu items`);
 
   } catch (error) {
     console.error('❌ Error seeding database:', error);

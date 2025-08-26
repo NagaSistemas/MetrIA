@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import type { Restaurant, Table, Order } from '../../../../shared/types';
-import { Plus, Edit, Download, Users, TrendingUp, Clock, DollarSign, ChefHat, Sparkles, BarChart3, FileText, Trash2 } from 'lucide-react';
+import { Plus, Edit, Download, Users, TrendingUp, Clock, DollarSign, ChefHat, Sparkles, BarChart3, FileText, Trash2, QrCode, Table as TableIcon } from 'lucide-react';
 import MenuManagement from './components/MenuManagement';
+import AIConfiguration from './components/AIConfiguration';
 
 const AdminPanel: React.FC = () => {
   const [, setRestaurant] = useState<Restaurant | null>(null);
@@ -122,16 +123,24 @@ const AdminPanel: React.FC = () => {
     if (!editingTable || !editTableNumber.trim()) return;
     
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/admin/tables/${editingTable.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/tables/${editingTable.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ number: editTableNumber.trim() })
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Erro ao atualizar mesa: ${errorData.error || 'Mesa não encontrada'}`);
+        return;
+      }
+      
       setEditingTable(null);
       setEditTableNumber('');
       fetchTables();
     } catch (error) {
       console.error('Error updating table:', error);
+      alert('Erro de conexão. Tente novamente.');
     }
   };
 
@@ -144,12 +153,20 @@ const AdminPanel: React.FC = () => {
     if (!confirm(`Tem certeza que deseja deletar a Mesa ${table.number}?`)) return;
     
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/admin/tables/${table.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/tables/${table.id}`, {
         method: 'DELETE'
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Erro ao deletar mesa: ${errorData.error || 'Mesa não encontrada'}`);
+        return;
+      }
+      
       fetchTables();
     } catch (error) {
       console.error('Error deleting table:', error);
+      alert('Erro de conexão. Tente novamente.');
     }
   };
 
@@ -494,22 +511,108 @@ const AdminPanel: React.FC = () => {
         {/* Tables Management */}
         {activeTab === 'tables' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div>
-                <h2 style={{ 
-                  fontFamily: 'Cinzel, serif',
-                  fontSize: '36px', 
-                  fontWeight: '700', 
-                  color: '#D4AF37',
-                  margin: 0,
-                  marginBottom: '8px'
-                }}>
-                  Gerenciar Mesas
-                </h2>
-                <p style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '16px' }}>
-                  Cada mesa possui QR Code único para acesso direto ao cardápio
-                </p>
+            {/* Professional Header */}
+            <div style={{
+              background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
+              border: '1px solid rgba(212, 175, 55, 0.3)',
+              borderRadius: '16px',
+              padding: '32px',
+              textAlign: 'center'
+            }}>
+              <div style={{
+                width: '80px',
+                height: '80px',
+                background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 16px',
+                boxShadow: '0 8px 25px rgba(59, 130, 246, 0.3)'
+              }}>
+                <TableIcon size={40} style={{ color: '#F5F5F5' }} />
               </div>
+              <h2 style={{ 
+                fontFamily: 'Cinzel, serif',
+                fontSize: '32px', 
+                fontWeight: '700', 
+                color: '#D4AF37',
+                margin: 0,
+                marginBottom: '8px'
+              }}>
+                Gerenciamento de Mesas
+              </h2>
+              <p style={{ 
+                color: '#F5F5F5', 
+                opacity: 0.8, 
+                fontSize: '16px',
+                maxWidth: '600px',
+                margin: '0 auto 24px'
+              }}>
+                Controle completo das mesas do restaurante com QR Codes únicos e monitoramento em tempo real
+              </p>
+              
+              {/* Stats Summary */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '32px',
+                marginBottom: '24px',
+                flexWrap: 'wrap'
+              }}>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{
+                    fontSize: '28px',
+                    fontWeight: '700',
+                    color: '#3b82f6',
+                    marginBottom: '4px'
+                  }}>
+                    {stats.totalTables}
+                  </div>
+                  <div style={{
+                    fontSize: '14px',
+                    color: '#F5F5F5',
+                    opacity: 0.7
+                  }}>
+                    Total de Mesas
+                  </div>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{
+                    fontSize: '28px',
+                    fontWeight: '700',
+                    color: '#10b981',
+                    marginBottom: '4px'
+                  }}>
+                    {stats.activeTables}
+                  </div>
+                  <div style={{
+                    fontSize: '14px',
+                    color: '#F5F5F5',
+                    opacity: 0.7
+                  }}>
+                    Mesas Ativas
+                  </div>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{
+                    fontSize: '28px',
+                    fontWeight: '700',
+                    color: '#D4AF37',
+                    marginBottom: '4px'
+                  }}>
+                    {stats.totalTables - stats.activeTables}
+                  </div>
+                  <div style={{
+                    fontSize: '14px',
+                    color: '#F5F5F5',
+                    opacity: 0.7
+                  }}>
+                    Mesas Livres
+                  </div>
+                </div>
+              </div>
+              
               <button
                 onClick={() => {
                   const quantity = prompt('Quantas mesas gerar?');
@@ -519,12 +622,12 @@ const AdminPanel: React.FC = () => {
                   background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
                   color: '#0D0D0D',
                   border: 'none',
-                  padding: '16px 24px',
+                  padding: '16px 32px',
                   borderRadius: '12px',
                   fontSize: '16px',
                   fontWeight: '600',
                   cursor: 'pointer',
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
                   transition: 'all 0.3s ease',
@@ -540,25 +643,30 @@ const AdminPanel: React.FC = () => {
                 }}
               >
                 <Plus size={20} />
-                Gerar Mesas
+                Gerar Novas Mesas
               </button>
             </div>
 
+            {/* Tables Grid */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))',
               gap: '24px'
             }}>
               {tables.map((table) => (
                 <div 
                   key={table.id} 
                   style={{
-                    backgroundColor: '#2C2C2C',
-                    border: '1px solid rgba(212, 175, 55, 0.2)',
+                    background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
+                    border: table.currentSession 
+                      ? '1px solid rgba(16, 185, 129, 0.3)' 
+                      : '1px solid rgba(212, 175, 55, 0.2)',
                     borderRadius: '16px',
-                    padding: '24px',
+                    padding: '28px',
                     boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s ease',
+                    position: 'relative',
+                    overflow: 'hidden'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-4px)';
@@ -569,164 +677,406 @@ const AdminPanel: React.FC = () => {
                     e.currentTarget.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.5)';
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-                    <div>
-                      <h3 style={{ 
-                        fontFamily: 'Cinzel, serif',
-                        fontSize: '24px', 
-                        fontWeight: '600', 
-                        color: '#D4AF37',
-                        margin: 0,
-                        marginBottom: '4px'
+                  {/* Status Indicator */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '4px',
+                    height: '100%',
+                    background: table.currentSession 
+                      ? 'linear-gradient(180deg, #10b981, #059669)' 
+                      : 'linear-gradient(180deg, #D4AF37, #B8860B)'
+                  }}></div>
+                  
+                  {/* Header */}
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'flex-start', 
+                    marginBottom: '24px' 
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <div style={{
+                        width: '56px',
+                        height: '56px',
+                        background: table.currentSession 
+                          ? 'linear-gradient(135deg, #10b981, #059669)' 
+                          : 'linear-gradient(135deg, #D4AF37, #B8860B)',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: table.currentSession 
+                          ? '0 4px 15px rgba(16, 185, 129, 0.3)' 
+                          : '0 4px 15px rgba(212, 175, 55, 0.3)'
                       }}>
-                        Mesa {table.number}
-                      </h3>
-                      <p style={{ 
-                        color: '#F5F5F5', 
-                        opacity: 0.6, 
-                        fontSize: '12px',
-                        margin: 0
-                      }}>
-                        ID: {table.id.slice(-6)}
-                      </p>
+                        <Users size={28} style={{ color: '#F5F5F5' }} />
+                      </div>
+                      <div>
+                        <h3 style={{ 
+                          fontFamily: 'Cinzel, serif',
+                          fontSize: '24px', 
+                          fontWeight: '700', 
+                          color: '#D4AF37',
+                          margin: 0,
+                          marginBottom: '4px'
+                        }}>
+                          Mesa {table.number}
+                        </h3>
+                        <p style={{ 
+                          color: '#F5F5F5', 
+                          opacity: 0.6, 
+                          fontSize: '12px',
+                          margin: 0,
+                          fontFamily: 'monospace'
+                        }}>
+                          ID: {table.id.slice(-8)}
+                        </p>
+                      </div>
                     </div>
+                    
+                    {/* Action Buttons */}
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button
-                        onClick={() => downloadQRCode(table)}
+                        onClick={() => {
+                          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&format=png&margin=20&data=${encodeURIComponent(table.qrCode)}`;
+                          window.open(qrUrl, '_blank');
+                        }}
                         style={{
-                          backgroundColor: '#D4AF37',
-                          color: '#0D0D0D',
-                          border: 'none',
-                          padding: '8px',
-                          borderRadius: '8px',
+                          backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                          border: '1px solid rgba(139, 92, 246, 0.3)',
+                          color: '#8b5cf6',
+                          padding: '10px',
+                          borderRadius: '10px',
                           cursor: 'pointer',
                           transition: 'all 0.3s ease'
                         }}
                         onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.2)';
+                          e.currentTarget.style.borderColor = '#8b5cf6';
                           e.currentTarget.style.transform = 'scale(1.1)';
                         }}
                         onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.1)';
+                          e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.3)';
                           e.currentTarget.style.transform = 'scale(1)';
+                        }}
+                        title="Visualizar QR Code"
+                      >
+                        <QrCode size={18} />
+                      </button>
+                      <button
+                        onClick={() => downloadQRCode(table)}
+                        style={{
+                          background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
+                          color: '#0D0D0D',
+                          border: 'none',
+                          padding: '10px',
+                          borderRadius: '10px',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                          boxShadow: '0 2px 8px rgba(212, 175, 55, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                          e.currentTarget.style.boxShadow = '0 2px 8px rgba(212, 175, 55, 0.3)';
                         }}
                         title="Baixar QR Code"
                       >
-                        <Download size={16} />
+                        <Download size={18} />
                       </button>
                       <button 
                         onClick={() => startEditTable(table)}
                         style={{
-                          backgroundColor: 'transparent',
-                          border: '1px solid rgba(212, 175, 55, 0.3)',
-                          color: '#D4AF37',
-                          padding: '8px',
-                          borderRadius: '8px',
+                          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                          border: '1px solid rgba(59, 130, 246, 0.3)',
+                          color: '#3b82f6',
+                          padding: '10px',
+                          borderRadius: '10px',
                           cursor: 'pointer',
                           transition: 'all 0.3s ease'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-                          e.currentTarget.style.borderColor = '#D4AF37';
+                          e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
+                          e.currentTarget.style.borderColor = '#3b82f6';
+                          e.currentTarget.style.transform = 'scale(1.1)';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                          e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
+                          e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+                          e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+                          e.currentTarget.style.transform = 'scale(1)';
                         }}
                         title="Editar Mesa"
                       >
-                        <Edit size={16} />
+                        <Edit size={18} />
                       </button>
                       <button 
                         onClick={() => deleteTable(table)}
                         style={{
-                          backgroundColor: 'transparent',
+                          backgroundColor: 'rgba(239, 68, 68, 0.1)',
                           border: '1px solid rgba(239, 68, 68, 0.3)',
                           color: '#ef4444',
-                          padding: '8px',
-                          borderRadius: '8px',
+                          padding: '10px',
+                          borderRadius: '10px',
                           cursor: 'pointer',
                           transition: 'all 0.3s ease'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                          e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
                           e.currentTarget.style.borderColor = '#ef4444';
+                          e.currentTarget.style.transform = 'scale(1.1)';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent';
+                          e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
                           e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                          e.currentTarget.style.transform = 'scale(1)';
                         }}
                         title="Deletar Mesa"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={18} />
                       </button>
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ color: '#F5F5F5', opacity: 0.8 }}>Status:</span>
-                      <span style={{
+                  {/* Status Section */}
+                  <div style={{
+                    backgroundColor: 'rgba(13, 13, 13, 0.5)',
+                    borderRadius: '12px',
+                    padding: '20px',
+                    marginBottom: '20px',
+                    border: '1px solid rgba(212, 175, 55, 0.1)'
+                  }}>
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center',
+                      marginBottom: '16px'
+                    }}>
+                      <span style={{ 
+                        color: '#F5F5F5', 
+                        fontSize: '16px',
+                        fontWeight: '500'
+                      }}>
+                        Status Atual
+                      </span>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
                         backgroundColor: table.currentSession 
                           ? 'rgba(16, 185, 129, 0.2)' 
                           : 'rgba(212, 175, 55, 0.2)',
-                        color: table.currentSession ? '#10b981' : '#D4AF37',
-                        border: `1px solid ${table.currentSession ? 'rgba(16, 185, 129, 0.3)' : 'rgba(212, 175, 55, 0.3)'}`,
-                        padding: '6px 12px',
-                        borderRadius: '20px',
-                        fontSize: '12px',
-                        fontWeight: '600'
+                        border: `1px solid ${table.currentSession ? 'rgba(16, 185, 129, 0.4)' : 'rgba(212, 175, 55, 0.4)'}`,
+                        padding: '8px 16px',
+                        borderRadius: '25px'
                       }}>
-                        {table.currentSession ? '🟢 Ocupada' : '⚪ Livre'}
-                      </span>
+                        <div style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          backgroundColor: table.currentSession ? '#10b981' : '#D4AF37',
+                          animation: table.currentSession ? 'pulse 2s infinite' : 'none'
+                        }}></div>
+                        <span style={{
+                          color: table.currentSession ? '#10b981' : '#D4AF37',
+                          fontSize: '14px',
+                          fontWeight: '600'
+                        }}>
+                          {table.currentSession ? 'Ocupada' : 'Disponível'}
+                        </span>
+                      </div>
                     </div>
                     
                     {table.currentSession && (
-                      <>
-                        <div style={{ 
-                          fontSize: '14px', 
-                          color: '#F5F5F5', 
-                          opacity: 0.7 
-                        }}>
-                          Sessão: {table.currentSession.status}
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '12px',
+                        paddingTop: '16px',
+                        borderTop: '1px solid rgba(212, 175, 55, 0.1)'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '14px' }}>Sessão:</span>
+                          <span style={{ color: '#F5F5F5', fontSize: '14px', fontWeight: '500' }}>
+                            {table.currentSession.status}
+                          </span>
                         </div>
-                        <button
-                          onClick={() => closeTableSession(table.id)}
-                          style={{
-                            width: '100%',
-                            backgroundColor: 'transparent',
-                            border: '2px solid #ef4444',
-                            color: '#ef4444',
-                            padding: '12px',
-                            borderRadius: '8px',
-                            fontSize: '14px',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s ease'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#ef4444';
-                            e.currentTarget.style.color = '#F5F5F5';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                            e.currentTarget.style.color = '#ef4444';
-                          }}
-                        >
-                          Encerrar Sessão
-                        </button>
-                      </>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '14px' }}>Iniciada:</span>
+                          <span style={{ color: '#F5F5F5', fontSize: '14px', fontWeight: '500' }}>
+                            {new Date(table.currentSession.createdAt).toLocaleTimeString('pt-BR', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                      </div>
                     )}
                   </div>
+                  
+                  {/* QR Code Info */}
+                  <div style={{
+                    backgroundColor: 'rgba(13, 13, 13, 0.3)',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    marginBottom: table.currentSession ? '20px' : '0',
+                    border: '1px solid rgba(212, 175, 55, 0.1)'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <div style={{ 
+                          color: '#F5F5F5', 
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          marginBottom: '4px'
+                        }}>
+                          QR Code Único
+                        </div>
+                        <div style={{ 
+                          color: '#F5F5F5', 
+                          opacity: 0.6, 
+                          fontSize: '12px',
+                          fontFamily: 'monospace'
+                        }}>
+                          {table.qrCode.slice(-20)}...
+                        </div>
+                      </div>
+                      <div style={{
+                        width: '32px',
+                        height: '32px',
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <span style={{ fontSize: '16px' }}>📱</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Action Button */}
+                  {table.currentSession && (
+                    <button
+                      onClick={() => closeTableSession(table.id)}
+                      style={{
+                        width: '100%',
+                        background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                        color: '#F5F5F5',
+                        border: 'none',
+                        padding: '14px',
+                        borderRadius: '12px',
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        boxShadow: '0 4px 15px rgba(239, 68, 68, 0.3)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(239, 68, 68, 0.4)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(239, 68, 68, 0.3)';
+                      }}
+                    >
+                      🔒 Encerrar Sessão
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
+            
+            {/* Empty State */}
+            {tables.length === 0 && (
+              <div style={{
+                backgroundColor: '#2C2C2C',
+                border: '1px solid rgba(212, 175, 55, 0.2)',
+                borderRadius: '16px',
+                padding: '64px',
+                textAlign: 'center',
+                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)'
+              }}>
+                <div style={{
+                  width: '80px',
+                  height: '80px',
+                  backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 24px'
+                }}>
+                  <TableIcon size={40} style={{ color: '#D4AF37' }} />
+                </div>
+                <h3 style={{ 
+                  fontFamily: 'Cinzel, serif',
+                  fontSize: '24px', 
+                  fontWeight: '600', 
+                  color: '#D4AF37',
+                  margin: 0,
+                  marginBottom: '12px'
+                }}>
+                  Nenhuma Mesa Cadastrada
+                </h3>
+                <p style={{ 
+                  color: '#F5F5F5', 
+                  opacity: 0.7,
+                  marginBottom: '24px'
+                }}>
+                  Comece gerando suas primeiras mesas para o restaurante
+                </p>
+                <button
+                  onClick={() => {
+                    const quantity = prompt('Quantas mesas gerar?');
+                    if (quantity) generateTables(parseInt(quantity));
+                  }}
+                  style={{
+                    background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
+                    color: '#0D0D0D',
+                    border: 'none',
+                    padding: '16px 32px',
+                    borderRadius: '12px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(212, 175, 55, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.3)';
+                  }}
+                >
+                  <Plus size={20} />
+                  Gerar Primeiras Mesas
+                </button>
+              </div>
+            )}
           </div>
         )}
 
         {/* Menu Management */}
         {activeTab === 'menu' && <MenuManagement />}
 
-        {/* Outras abas com placeholder */}
-        {(activeTab === 'ai' || activeTab === 'orders') && (
+        {/* AI Configuration */}
+        {activeTab === 'ai' && <AIConfiguration />}
+
+        {/* Orders placeholder */}
+        {activeTab === 'orders' && (
           <div style={{
             backgroundColor: '#2C2C2C',
             border: '1px solid rgba(212, 175, 55, 0.2)',
@@ -736,8 +1086,7 @@ const AdminPanel: React.FC = () => {
             boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)'
           }}>
             <div style={{ marginBottom: '24px' }}>
-              {activeTab === 'ai' && <Sparkles size={64} style={{ color: '#D4AF37', margin: '0 auto' }} />}
-              {activeTab === 'orders' && <FileText size={64} style={{ color: '#D4AF37', margin: '0 auto' }} />}
+              <FileText size={64} style={{ color: '#D4AF37', margin: '0 auto' }} />
             </div>
             <h3 style={{ 
               fontFamily: 'Cinzel, serif',
@@ -747,8 +1096,7 @@ const AdminPanel: React.FC = () => {
               margin: 0,
               marginBottom: '12px'
             }}>
-              {activeTab === 'ai' && 'Configuração do Agente IA'}
-              {activeTab === 'orders' && 'Histórico de Pedidos'}
+              Histórico de Pedidos
             </h3>
             <p style={{ color: '#F5F5F5', opacity: 0.7 }}>
               Funcionalidade em desenvolvimento

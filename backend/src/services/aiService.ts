@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { db } from '../config/firebase';
 
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
 
@@ -30,8 +31,25 @@ export class AIService {
         `${item.name} - R$ ${item.price.toFixed(2)} - ${item.description} (Categoria: ${item.category})`
       ).join('\n');
 
-      // Prompt personalizado para restaurante
-      const systemPrompt = `Você é o assistente virtual do restaurante ${restaurantName}. 
+      // Buscar prompt personalizado do banco de dados
+      let customPrompt = '';
+      try {
+        const restaurantSnapshot = await db.collection('restaurants').limit(1).get();
+        const restaurant = restaurantSnapshot.docs[0]?.data();
+        customPrompt = restaurant?.aiPrompt || '';
+      } catch (error) {
+        console.error('Error fetching custom prompt:', error);
+      }
+
+      // Usar prompt personalizado ou padrão
+      const systemPrompt = customPrompt ? 
+        `${customPrompt}
+
+CARDÁPIO DISPONÍVEL:
+${menuContext}
+
+Contexto: ${isFirstMessage ? 'Esta é a primeira mensagem da conversa.' : 'Continue a conversa normalmente.'}` :
+        `Você é o assistente virtual do restaurante ${restaurantName}. 
 
 ${isFirstMessage ? 'Na PRIMEIRA mensagem, apresente-se educadamente e ofereça ajuda.' : 'Responda diretamente à pergunta sem se apresentar novamente.'}
 
