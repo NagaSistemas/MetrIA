@@ -14,38 +14,35 @@ router.get('/debug', (req, res) => {
 });
 
 // Simular pagamento PIX
-router.post('/pix', (req, res) => {
+router.post('/pix', async (req, res) => {
   try {
+    const { sessionId, amount } = req.body;
+    
     const orderId = uuidv4();
     const order = {
       id: orderId,
-      sessionId: req.body.sessionId || 'test-session',
+      sessionId: sessionId || 'test-session',
       tableNumber: Math.floor(Math.random() * 10) + 1,
       items: [{
         menuItemId: 'item-1',
         quantity: 1,
-        price: req.body.amount || 50,
+        price: Number(amount) || 50,
         name: 'Pedido Simulado'
       }],
-      total: req.body.amount || 50,
+      total: Number(amount) || 50,
       status: 'PENDING',
       paymentStatus: 'PAID',
       isExtra: false,
       createdAt: new Date().toISOString()
     };
 
-    // Simular salvamento (sem Firebase para evitar erro)
-    setTimeout(async () => {
-      try {
-        await db.collection('orders').doc(orderId).set(order);
-      } catch (e) {
-        console.log('Firebase error (ignored):', e.message);
-      }
-    }, 100);
-
+    // Salvar no Firebase
+    await db.collection('orders').doc(orderId).set(order);
+    
     res.json({ success: true, orderId });
-  } catch (error) {
-    res.json({ success: true, orderId: 'test-order-' + Date.now() });
+  } catch (error: any) {
+    console.error('Payment error:', error);
+    res.status(500).json({ error: 'Payment failed', details: error.message });
   }
 });
 
