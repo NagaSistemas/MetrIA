@@ -13,6 +13,46 @@ router.get('/debug', (req, res) => {
   });
 });
 
+// Get session by ID - MUST BE BEFORE /:restaurantId/:tableId
+router.get('/by-id/:sessionId', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const { token } = req.query;
+
+    console.log('SESSION BY ID REQUEST:', sessionId, token);
+
+    // Always create a working session
+    const session = {
+      id: sessionId,
+      tableId: 'demo-table',
+      restaurantId: 'default',
+      status: 'OPEN',
+      token: token as string,
+      createdAt: new Date(),
+      orders: [],
+      waiterCalls: [],
+      tableNumber: 1
+    };
+
+    // Get menu items
+    const menuSnapshot = await db.collection('menuItems')
+      .where('available', '==', true)
+      .get();
+
+    const menu = menuSnapshot.docs.map((doc: any) => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    console.log('RETURNING SESSION WITH MENU:', menu.length, 'items');
+
+    res.json({ session, menu });
+  } catch (error) {
+    console.error('Error in by-id route:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // Get or create session for table
 router.get('/:restaurantId/:tableId', async (req, res) => {
   try {
@@ -74,44 +114,6 @@ router.get('/:restaurantId/:tableId', async (req, res) => {
   }
 });
 
-// Get session by ID - Always works
-router.get('/by-id/:sessionId', async (req, res) => {
-  try {
-    const { sessionId } = req.params;
-    const { token } = req.query;
 
-    console.log('SESSION BY ID REQUEST:', sessionId, token);
-
-    // Always create a working session
-    const session = {
-      id: sessionId,
-      tableId: 'demo-table',
-      restaurantId: 'default',
-      status: 'OPEN',
-      token: token as string,
-      createdAt: new Date(),
-      orders: [],
-      waiterCalls: [],
-      tableNumber: 1
-    };
-
-    // Get menu items
-    const menuSnapshot = await db.collection('menuItems')
-      .where('available', '==', true)
-      .get();
-
-    const menu = menuSnapshot.docs.map((doc: any) => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-
-    console.log('RETURNING SESSION WITH MENU:', menu.length, 'items');
-
-    res.json({ session, menu });
-  } catch (error) {
-    console.error('Error in by-id route:', error);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
 
 export default router;
