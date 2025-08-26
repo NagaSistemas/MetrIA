@@ -237,7 +237,7 @@ const AdminPanel: React.FC = () => {
                 width: 'auto',
                 filter: 'drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3))',
                 display: 'block',
-                margin: '0 auto 8px auto'
+                margin: '0 auto 4px auto'
               }} 
             />
             <h1 style={{ 
