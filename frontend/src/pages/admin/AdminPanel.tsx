@@ -9,6 +9,7 @@ const AdminPanel: React.FC = () => {
   const [, setRestaurant] = useState<Restaurant | null>(null);
   const [tables, setTables] = useState<Table[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [activeTab, setActiveTab] = useState<'dashboard' | 'tables' | 'menu' | 'ai' | 'orders'>('dashboard');
   const [isLoading, setIsLoading] = useState(true);
   const [editingTable, setEditingTable] = useState<Table | null>(null);
@@ -24,7 +25,16 @@ const AdminPanel: React.FC = () => {
 
   useEffect(() => {
     fetchAllData();
-  }, []);
+    
+    // Polling para atualizar pedidos em tempo real
+    const interval = setInterval(() => {
+      if (activeTab === 'orders' || activeTab === 'dashboard') {
+        fetchOrders();
+      }
+    }, 3000); // Atualiza a cada 3 segundos
+    
+    return () => clearInterval(interval);
+  }, [activeTab]);
 
   const fetchAllData = async () => {
     setIsLoading(true);
@@ -68,6 +78,35 @@ const AdminPanel: React.FC = () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/orders`);
       const data = await response.json();
+      
+      // Verificar se há novos pedidos
+      const newOrdersCount = data.length - orders.length;
+      if (newOrdersCount > 0 && orders.length > 0) {
+        // Mostrar notificação de novo pedido
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: white;
+          padding: 16px 24px;
+          border-radius: 12px;
+          box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+          z-index: 9999;
+          font-weight: 600;
+          animation: slideIn 0.3s ease;
+        `;
+        notification.innerHTML = `🔔 ${newOrdersCount} novo${newOrdersCount > 1 ? 's' : ''} pedido${newOrdersCount > 1 ? 's' : ''}!`;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+          }
+        }, 4000);
+      }
+      
       setOrders(data);
       
       const today = new Date().toDateString();
@@ -1306,24 +1345,29 @@ const AdminPanel: React.FC = () => {
                   ].map(filter => (
                     <button
                       key={filter.id}
+                      onClick={() => setStatusFilter(filter.id)}
                       style={{
                         padding: '8px 16px',
                         borderRadius: '20px',
-                        border: 'none',
-                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                        border: statusFilter === filter.id ? '2px solid #D4AF37' : 'none',
+                        backgroundColor: statusFilter === filter.id ? 'rgba(212, 175, 55, 0.3)' : 'rgba(212, 175, 55, 0.1)',
                         color: filter.color,
                         fontSize: '14px',
-                        fontWeight: '500',
+                        fontWeight: statusFilter === filter.id ? '700' : '500',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.2)';
-                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        if (statusFilter !== filter.id) {
+                          e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.2)';
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                        }
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-                        e.currentTarget.style.transform = 'translateY(0)';
+                        if (statusFilter !== filter.id) {
+                          e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }
                       }}
                     >
                       {filter.label}
@@ -1377,14 +1421,16 @@ const AdminPanel: React.FC = () => {
                   </p>
                 </div>
               ) : (
-                orders.map(order => (
-                  <OrderCard
-                    key={order.id}
-                    order={order}
-                    onUpdateStatus={updateOrderStatus}
-                    onCancelOrder={cancelOrder}
-                  />
-                ))
+                orders
+                  .filter(order => statusFilter === 'all' || order.status === statusFilter)
+                  .map(order => (
+                    <OrderCard
+                      key={order.id}
+                      order={order}
+                      onUpdateStatus={updateOrderStatus}
+                      onCancelOrder={cancelOrder}
+                    />
+                  ))
               )}
             </div>
             
@@ -1675,6 +1721,16 @@ const AdminPanel: React.FC = () => {
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
+        }
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
         }
         
         /* Mobile Responsive Styles */

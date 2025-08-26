@@ -11,6 +11,11 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onUpdateStatus, onCancelOr
   const [timeElapsed, setTimeElapsed] = useState(0);
 
   useEffect(() => {
+    // Parar timer se pedido foi entregue
+    if (order.status === 'DELIVERED') {
+      return;
+    }
+
     const updateTimer = () => {
       try {
         const createdTime = typeof order.createdAt === 'string' 
@@ -29,7 +34,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onUpdateStatus, onCancelOr
     updateTimer();
     const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
-  }, [order.createdAt]);
+  }, [order.createdAt, order.status]);
 
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || seconds < 0) return '00:00';
