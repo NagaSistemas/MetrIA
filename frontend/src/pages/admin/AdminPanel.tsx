@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import type { Restaurant, Table, Order } from '../../../../shared/types';
-import { Plus, Edit, Download, Users, TrendingUp, Clock, DollarSign, ChefHat, Sparkles, BarChart3, FileText, Trash2, QrCode, Table as TableIcon } from 'lucide-react';
+import { Plus, Edit, Download, Users, TrendingUp, Clock, DollarSign, ChefHat, Sparkles, BarChart3, FileText, Trash2, QrCode, Table as TableIcon, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import MenuManagement from './components/MenuManagement';
 import AIConfiguration from './components/AIConfiguration';
 import OrderCard from './components/OrderCard';
 
 const AdminPanel: React.FC = () => {
+  const navigate = useNavigate();
   const [, setRestaurant] = useState<Restaurant | null>(null);
   const [tables, setTables] = useState<Table[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -26,6 +28,13 @@ const AdminPanel: React.FC = () => {
   });
 
   useEffect(() => {
+    // Verificar se está logado
+    const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+    if (!isLoggedIn) {
+      navigate('/admin/login');
+      return;
+    }
+    
     fetchAllData();
     
     // Polling para atualizar pedidos em tempo real
@@ -302,6 +311,40 @@ const AdminPanel: React.FC = () => {
             }}>
               Painel Administrativo
             </h1>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminActiveTab');
+                navigate('/admin/login');
+              }}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                color: '#ef4444',
+                padding: '8px 12px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+              }}
+              title="Sair do sistema"
+            >
+              <LogOut size={16} />
+              Sair
+            </button>
           </div>
           
           {/* Navigation Tabs */}

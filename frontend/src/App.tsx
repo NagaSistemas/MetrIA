@@ -8,6 +8,7 @@ import TrayPage from './pages/client/TrayPage';
 import CheckoutPage from './pages/client/CheckoutPage';
 import KitchenPanel from './pages/kitchen/KitchenPanel';
 import AdminPanel from './pages/admin/AdminPanel';
+import LoginPage from './pages/admin/LoginPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/tray" element={<TrayPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/kitchen" element={<KitchenPanel />} />
+          <Route path="/admin/login" element={<LoginPage />} />
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/" element={
             <div className="min-h-screen bg-metria-black flex items-center justify-center">
