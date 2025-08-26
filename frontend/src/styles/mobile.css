@@ -135,4 +135,30 @@
     max-width: 100% !important;
     box-sizing: border-box !important;
   }
+  
+  /* Specific fix for table action buttons */
+  [style*="background: 'linear-gradient"] [style*="display: 'flex'"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+  
+  /* Table card button groups */
+  [style*="background: 'linear-gradient"] button[style*="background: 'transparent'"] {
+    width: 100% !important;
+    margin: 2px 0 !important;
+    padding: 8px !important;
+    font-size: 12px !important;
+  }
+  
+  /* QR Code, Edit, Delete buttons */
+  button[style*="color: '#D4AF37'"],
+  button[style*="color: '#4CAF50'"],
+  button[style*="color: '#f44336'"] {
+    width: 100% !important;
+    margin: 2px 0 !important;
+    padding: 8px !important;
+    font-size: 12px !important;
+    text-align: center !important;
+  }
 }
