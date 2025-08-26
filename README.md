@@ -1,119 +1,152 @@
-# MetrIA - Sistema de Cardápio Digital com IA
+# 🍽️ MetrIA - Sistema de Cardápio Digital com IA
 
-Sistema completo de cardápio de mesa com QR Code individual, assistente de IA, pagamentos integrados e painéis de gerenciamento.
+[![Deploy Status](https://img.shields.io/badge/deploy-railway-success)](https://metria-production.up.railway.app)
+[![Firebase](https://img.shields.io/badge/database-firebase-orange)](https://firebase.google.com)
+[![AI](https://img.shields.io/badge/ai-deepseek-blue)](https://deepseek.com)
+
+Sistema completo de cardápio digital com QR Code individual por mesa, assistente de IA integrado, pagamentos e painéis de gerenciamento.
 
 ## 🚀 Funcionalidades
 
-- **Cardápio Digital**: QR Code único por mesa com cardápio interativo
-- **Assistente IA**: Recomendações personalizadas usando DeepSeek
-- **Pagamentos**: Integração com iPag (PIX e Cartão)
-- **Painel Cozinha**: Gerenciamento de pedidos em tempo real
-- **Painel Admin**: Controle completo de mesas, pedidos e configurações
-- **Chamada de Garçom**: Sistema de alertas para atendimento
+### 📱 Para o Cliente
+- **QR Code único por mesa** com sessão individual
+- **Cardápio digital interativo** com categorias
+- **Assistente IA** para recomendações personalizadas
+- **Carrinho inteligente** ("prato") com contador
+- **Chamada de garçom** com um clique
+- **Pedidos extras** durante a refeição
+
+### 👨‍🍳 Painel da Cozinha
+- **Pedidos em tempo real** com status
+- **Alertas de garçom** visuais e sonoros
+- **Controle de etapas** (Pendente → Entregue)
+- **Pedidos extras** identificados
+
+### 🔧 Painel Administrativo
+- **Geração automática de mesas** com QR Codes
+- **Download de QR Codes** individuais
+- **Controle de sessões** (abrir/fechar mesas)
+- **Histórico completo de pedidos**
+- **Configuração do assistente IA**
+
+## 🤖 Assistente IA (DeepSeek)
+
+- **Contextual**: Conhece todo o cardápio em tempo real
+- **Personalizado**: Recomendações baseadas no perfil
+- **Inteligente**: Explica ingredientes e preparos
+- **Integrado**: Orienta sobre como fazer pedidos
+- **Sessões**: Mantém histórico por mesa
 
 ## 🛠️ Stack Tecnológica
 
 - **Frontend**: React + Vite + TypeScript + Tailwind CSS
 - **Backend**: Node.js + Express + TypeScript
-- **Banco de Dados**: Firebase Firestore
-- **Pagamentos**: iPag
-- **IA**: DeepSeek
-- **Hospedagem**: Hostinger (Frontend)
-
-## 📋 Pré-requisitos
-
-- Node.js 18+
-- Conta Firebase
-- Conta iPag
-- Conta DeepSeek
-
-## 🔧 Instalação
-
-### 1. Clone o repositório
-```bash
-git clone <repository-url>
-cd metria-project
-```
-
-### 2. Configure o Backend
-
-```bash
-cd backend
-npm install
-cp .env.example .env
-```
-
-Edite o arquivo `.env` com suas credenciais:
-- Firebase (Project ID, Client Email, Private Key)
-- iPag (API Key)
-- DeepSeek (API Key)
-
-### 3. Configure o Frontend
-
-```bash
-cd ../frontend
-npm install
-cp .env.example .env
-```
-
-Edite o arquivo `.env` com suas configurações do Firebase.
-
-### 4. Inicie os serviços
-
-**Backend:**
-```bash
-cd backend
-npm run dev
-```
-
-**Frontend:**
-```bash
-cd frontend
-npm run dev
-```
+- **Database**: Firebase Firestore
+- **AI**: DeepSeek API
+- **Deploy**: Railway (Backend) + Hostinger (Frontend)
+- **Pagamentos**: iPag (em desenvolvimento)
 
 ## 🌐 URLs do Sistema
 
-- **Cardápio**: `https://app.seudominio.com/m/{restaurantId}/{tableId}?t={sessionToken}`
-- **Painel Cozinha**: `https://app.seudominio.com/kitchen`
-- **Painel Admin**: `https://app.seudominio.com/admin`
+- **API**: https://metria-production.up.railway.app
+- **Cardápio**: `/m/{restaurantId}/{tableId}?t={token}`
+- **Cozinha**: `/kitchen`
+- **Admin**: `/admin`
 
-## 📱 Fluxo de Uso
+## 📋 Instalação
 
-### Cliente
-1. Escaneia QR Code da mesa
-2. Navega pelo cardápio ou usa assistente IA
-3. Adiciona itens ao "prato" (carrinho)
-4. Finaliza pedido e paga
-5. Pode adicionar itens extras ou chamar garçom
+### 1. Clone o repositório
+```bash
+git clone https://github.com/NagaSistemas/MetrIA.git
+cd MetrIA
+```
 
-### Cozinha
-1. Visualiza pedidos em tempo real
-2. Atualiza status dos pedidos
-3. Recebe alertas de chamadas de garçom
+### 2. Backend
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Configure as variáveis de ambiente
+npm run dev
+```
 
-### Administração
-1. Gera e gerencia mesas
-2. Monitora pedidos
-3. Configura assistente IA
-4. Encerra sessões de mesa
+### 3. Frontend
+```bash
+cd frontend
+npm install
+cp .env.example .env
+# Configure as variáveis de ambiente
+npm run dev
+```
 
-## 🔄 Estados da Mesa
+### 4. Popular dados iniciais
+```bash
+cd backend
+npm run seed
+```
 
-- **OPEN**: Mesa disponível para pedidos
-- **ORDERING**: Cliente montando pedido
+## 🔧 Configuração
+
+### Firebase
+1. Crie um projeto no Firebase
+2. Baixe o arquivo de credenciais JSON
+3. Configure as variáveis de ambiente
+
+### DeepSeek AI
+1. Obtenha uma API key do DeepSeek
+2. Configure no arquivo `.env`
+
+### Railway (Deploy)
+1. Conecte o repositório ao Railway
+2. Configure as variáveis de ambiente
+3. Deploy automático
+
+## 📊 Fluxo de Uso
+
+```mermaid
+graph TD
+    A[Cliente escaneia QR] --> B[Abre cardápio]
+    B --> C[Conversa com IA]
+    C --> D[Adiciona itens]
+    D --> E[Finaliza pedido]
+    E --> F[Paga]
+    F --> G[Aparece na cozinha]
+    G --> H[Staff prepara]
+    H --> I[Entrega]
+    I --> J[Encerra sessão]
+```
+
+## 🎯 Estados da Mesa
+
+- **OPEN**: Disponível para pedidos
+- **ORDERING**: Cliente montando pedido  
 - **PAYING**: Processando pagamento
 - **PAID**: Pagamento confirmado
 - **CLOSED**: Sessão encerrada
 
-## 🎯 Próximos Passos
+## 📁 Estrutura do Projeto
 
-1. Implementar integração completa com iPag
-2. Desenvolver assistente IA com DeepSeek
-3. Adicionar sistema de notificações push
-4. Implementar relatórios e analytics
-5. Criar app mobile nativo
+```
+MetrIA/
+├── frontend/          # React App
+├── backend/           # Node.js API
+├── shared/            # Tipos TypeScript
+├── Agente/            # Sistema IA original
+└── docs/              # Documentação
+```
+
+## 🔄 Próximos Passos
+
+- [ ] Integração completa iPag
+- [ ] Notificações push
+- [ ] App mobile nativo
+- [ ] Relatórios e analytics
+- [ ] Sistema de avaliações
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT.
+MIT License - veja [LICENSE](LICENSE) para detalhes.
+
+---
+
+**Desenvolvido por [Naga Sistemas](https://github.com/NagaSistemas)**
