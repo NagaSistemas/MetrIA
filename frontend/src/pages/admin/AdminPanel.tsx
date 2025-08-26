@@ -614,80 +614,38 @@ const AdminPanel: React.FC = () => {
                 </div>
               </div>
               
-              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <button
-                  onClick={async () => {
-                    try {
-                      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/tables/update-domains`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' }
-                      });
-                      const data = await response.json();
-                      alert(data.message || 'Domínios atualizados!');
-                      fetchTables();
-                    } catch (error) {
-                      alert('Erro ao atualizar domínios');
-                    }
-                  }}
-                  style={{
-                    background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-                    color: '#F5F5F5',
-                    border: 'none',
-                    padding: '16px 24px',
-                    borderRadius: '12px',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.4)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(59, 130, 246, 0.3)';
-                  }}
-                >
-                  🔄 Corrigir Domínios
-                </button>
-                <button
-                  onClick={() => {
-                    const quantity = prompt('Quantas mesas gerar?');
-                    if (quantity) generateTables(parseInt(quantity));
-                  }}
-                  style={{
-                    background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
-                    color: '#0D0D0D',
-                    border: 'none',
-                    padding: '16px 32px',
-                    borderRadius: '12px',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(212, 175, 55, 0.4)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.3)';
-                  }}
-                >
-                  <Plus size={20} />
-                  Gerar Novas Mesas
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  const quantity = prompt('Quantas mesas gerar?');
+                  if (quantity) generateTables(parseInt(quantity));
+                }}
+                style={{
+                  background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
+                  color: '#0D0D0D',
+                  border: 'none',
+                  padding: '16px 32px',
+                  borderRadius: '12px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(212, 175, 55, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.3)';
+                }}
+              >
+                <Plus size={20} />
+                Gerar Novas Mesas
+              </button>
             </div>
 
             {/* Tables Grid */}
