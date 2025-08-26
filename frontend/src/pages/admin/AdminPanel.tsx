@@ -1799,15 +1799,10 @@ const AdminPanel: React.FC = () => {
         /* Logout Button Mobile Styles */
         @media (max-width: 768px) {
           .logout-button {
-            position: fixed !important;
-            top: 16px !important;
-            right: 16px !important;
-            padding: 10px !important;
-            z-index: 1001 !important;
-          }
-          
-          .logout-text {
-            display: none !important;
+            position: static !important;
+            margin: 16px auto 0 auto !important;
+            width: fit-content !important;
+            padding: 12px 20px !important;
           }
         }
         
