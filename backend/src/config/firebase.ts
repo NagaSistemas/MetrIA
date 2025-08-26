@@ -4,9 +4,12 @@ let db: any;
 
 export const initializeFirebase = () => {
   if (!admin.apps.length) {
-    const serviceAccount = require('../../metria-fcbbc-firebase-adminsdk-fbsvc-4cc85edb37.json');
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+      credential: admin.credential.cert({
+        projectId: 'metria-fcbbc',
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL || 'firebase-adminsdk-fbsvc@metria-fcbbc.iam.gserviceaccount.com',
+        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || ''
+      }),
       databaseURL: 'https://metria-fcbbc.firebaseio.com'
     });
   }
