@@ -538,66 +538,23 @@ router.get('/test-storage', async (req, res) => {
   }
 });
 
-// Upload image to Firebase Storage
+// Upload image (Base64 storage)
 router.post('/upload-image', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No image file provided' });
     }
 
-    console.log('Uploading file:', req.file.originalname, 'Size:', req.file.size);
+    const base64Image = req.file.buffer.toString('base64');
+    const imageUrl = `data:${req.file.mimetype};base64,${base64Image}`;
     
-    if (!bucket) {
-      console.error('Firebase bucket not initialized');
-      // Temporary fallback while Firebase is being configured
-      const imageUrl = `${req.protocol}://${req.get('host')}/uploads/temp-${Date.now()}.jpg`;
-      return res.json({ success: true, imageUrl, filename: 'temp-file' });
-    }
-
-    const fileName = `menu-images/${Date.now()}-${req.file.originalname}`;
-    const file = bucket.file(fileName);
-    
-    console.log('Creating write stream for:', fileName);
-    
-    const stream = file.createWriteStream({
-      metadata: {
-        contentType: req.file.mimetype,
-      },
+    res.json({ 
+      success: true, 
+      imageUrl,
+      filename: req.file.originalname 
     });
-
-    stream.on('error', (error: any) => {
-      console.error('Upload stream error:', error);
-      if (!res.headersSent) {
-        res.status(500).json({ error: 'Upload failed: ' + error.message });
-      }
-    });
-
-    stream.on('finish', async () => {
-      try {
-        console.log('Upload finished, making file public');
-        await file.makePublic();
-        const imageUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-        
-        console.log('File uploaded successfully:', imageUrl);
-        
-        if (!res.headersSent) {
-          res.json({ 
-            success: true, 
-            imageUrl,
-            filename: fileName 
-          });
-        }
-      } catch (error: any) {
-        console.error('Error making file public:', error);
-        if (!res.headersSent) {
-          res.status(500).json({ error: 'Error making file public: ' + error.message });
-        }
-      }
-    });
-
-    stream.end(req.file.buffer);
   } catch (error: any) {
-    console.error('Error uploading image:', error);
+    console.error('Error processing image:', error);
     res.status(500).json({ error: 'Internal server error: ' + error.message });
   }
 });
