@@ -546,10 +546,10 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
       return res.status(400).json({ error: 'No image file provided' });
     }
 
-    // Compress image to reduce size
+    // Compress image aggressively to reduce size
     const compressedBuffer = await sharp(req.file.buffer)
-      .resize(800, 600, { fit: 'inside', withoutEnlargement: true })
-      .jpeg({ quality: 80 })
+      .resize(400, 300, { fit: 'inside', withoutEnlargement: true })
+      .jpeg({ quality: 60 })
       .toBuffer();
 
     const base64Image = compressedBuffer.toString('base64');
