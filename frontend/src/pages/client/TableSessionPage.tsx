@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import { Users, Clock, CheckCircle, AlertCircle, ChefHat } from 'lucide-react';
+import { Clock, CheckCircle, AlertCircle, ChefHat } from 'lucide-react';
 
 interface TableSession {
   id: string;
