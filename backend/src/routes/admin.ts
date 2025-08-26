@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { db, bucket } from '../config/firebase';
 import { v4 as uuidv4 } from 'uuid';
 import multer from 'multer';
+import sharp from 'sharp';
 
 const router = Router();
 
@@ -538,15 +539,21 @@ router.get('/test-storage', async (req, res) => {
   }
 });
 
-// Upload image (Base64 storage)
+// Upload image (Base64 storage with compression)
 router.post('/upload-image', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No image file provided' });
     }
 
-    const base64Image = req.file.buffer.toString('base64');
-    const imageUrl = `data:${req.file.mimetype};base64,${base64Image}`;
+    // Compress image to reduce size
+    const compressedBuffer = await sharp(req.file.buffer)
+      .resize(800, 600, { fit: 'inside', withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toBuffer();
+
+    const base64Image = compressedBuffer.toString('base64');
+    const imageUrl = `data:image/jpeg;base64,${base64Image}`;
     
     res.json({ 
       success: true, 
