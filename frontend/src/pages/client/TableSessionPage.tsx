@@ -129,11 +129,43 @@ const TableSessionPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-metria-black flex items-center justify-center p-4">
-        <div className="text-center">
-          <div className="animate-spin w-16 h-16 border-4 border-gold border-t-transparent rounded-full mx-auto mb-6"></div>
-          <h2 className="logo-metria text-3xl mb-2">MetrIA</h2>
-          <p className="text-metria-white/70">Validando mesa...</p>
+      <div style={{
+        minHeight: '100vh',
+        backgroundColor: '#0D0D0D',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <img 
+            src="/Logo.png" 
+            alt="MetrIA Logo" 
+            style={{ 
+              height: '120px', 
+              width: 'auto',
+              filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4))',
+              marginBottom: '32px'
+            }} 
+          />
+          <div style={{
+            width: '64px',
+            height: '64px',
+            border: '4px solid #D4AF37',
+            borderTop: '4px solid transparent',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 24px'
+          }}></div>
+          <h2 style={{ 
+            fontFamily: 'Cinzel, serif', 
+            fontSize: '28px', 
+            fontWeight: '700', 
+            color: '#D4AF37', 
+            marginBottom: '8px',
+            textShadow: '0 2px 10px rgba(212, 175, 55, 0.3)'
+          }}>MetrIA</h2>
+          <p style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '16px' }}>Validando sua mesa...</p>
         </div>
       </div>
     );
@@ -141,23 +173,77 @@ const TableSessionPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-metria-black flex items-center justify-center p-4">
-        <div className="card-luxury max-w-md w-full text-center">
-          <AlertCircle size={64} className="mx-auto text-red-500 mb-4" />
-          <h2 className="font-serif text-red-400 text-xl mb-3">QR Code Inválido</h2>
-          <p className="text-metria-white/70 mb-6">{error}</p>
-          <button
-            onClick={handleCallWaiter}
-            className="btn-gold w-full mb-3"
-          >
-            Chamar Garçom
-          </button>
-          <button
-            onClick={() => window.location.reload()}
-            className="w-full bg-transparent border border-metria-white/30 text-metria-white/70 py-3 rounded-lg hover:border-metria-white/50 transition-all"
-          >
-            Tentar Novamente
-          </button>
+      <div style={{
+        minHeight: '100vh',
+        backgroundColor: '#0D0D0D',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
+          border: '1px solid rgba(239, 68, 68, 0.3)',
+          borderRadius: '20px',
+          padding: '40px',
+          maxWidth: '400px',
+          width: '100%',
+          textAlign: 'center',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.7)'
+        }}>
+          <img 
+            src="/Logo.png" 
+            alt="MetrIA Logo" 
+            style={{ 
+              height: '80px', 
+              width: 'auto',
+              filter: 'drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3))',
+              marginBottom: '24px'
+            }} 
+          />
+          <AlertCircle size={64} style={{ color: '#ef4444', margin: '0 auto 16px' }} />
+          <h2 style={{
+            fontFamily: 'Cinzel, serif',
+            color: '#ef4444',
+            fontSize: '24px',
+            fontWeight: '600',
+            marginBottom: '12px'
+          }}>QR Code Inválido</h2>
+          <p style={{ color: '#F5F5F5', opacity: 0.7, marginBottom: '24px', fontSize: '16px' }}>{error}</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <button
+              onClick={handleCallWaiter}
+              style={{
+                background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
+                color: '#0D0D0D',
+                border: 'none',
+                padding: '16px 24px',
+                borderRadius: '12px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)'
+              }}
+            >
+              Chamar Garçom
+            </button>
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                backgroundColor: 'transparent',
+                border: '1px solid rgba(245, 245, 245, 0.3)',
+                color: '#F5F5F5',
+                padding: '16px 24px',
+                borderRadius: '12px',
+                fontSize: '16px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Tentar Novamente
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -165,11 +251,43 @@ const TableSessionPage: React.FC = () => {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-metria-black flex items-center justify-center p-4">
-        <div className="card-luxury max-w-md w-full text-center">
-          <AlertCircle size={64} className="mx-auto text-red-500 mb-4" />
-          <h2 className="font-serif text-red-400 text-xl mb-3">Mesa não encontrada</h2>
-          <p className="text-metria-white/70 mb-6">Não foi possível localizar esta mesa</p>
+      <div style={{
+        minHeight: '100vh',
+        backgroundColor: '#0D0D0D',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
+          border: '1px solid rgba(239, 68, 68, 0.3)',
+          borderRadius: '20px',
+          padding: '40px',
+          maxWidth: '400px',
+          width: '100%',
+          textAlign: 'center',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.7)'
+        }}>
+          <img 
+            src="/Logo.png" 
+            alt="MetrIA Logo" 
+            style={{ 
+              height: '80px', 
+              width: 'auto',
+              filter: 'drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3))',
+              marginBottom: '24px'
+            }} 
+          />
+          <AlertCircle size={64} style={{ color: '#ef4444', margin: '0 auto 16px' }} />
+          <h2 style={{
+            fontFamily: 'Cinzel, serif',
+            color: '#ef4444',
+            fontSize: '24px',
+            fontWeight: '600',
+            marginBottom: '12px'
+          }}>Mesa não encontrada</h2>
+          <p style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '16px' }}>Não foi possível localizar esta mesa</p>
         </div>
       </div>
     );
@@ -179,89 +297,304 @@ const TableSessionPage: React.FC = () => {
   const StatusIcon = statusInfo.icon;
 
   return (
-    <div className="min-h-screen bg-metria-black flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Header Elegante */}
-        <div className="text-center mb-8">
-          <h1 className="logo-metria text-4xl mb-3 animate-fade-in">MetrIA</h1>
-          <div className="flex items-center justify-center gap-3 text-metria-white/80">
-            <Users size={20} className="text-gold" />
-            <span className="font-serif text-gold text-xl">Mesa {session.tableNumber}</span>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#0D0D0D',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px'
+    }}>
+      <div style={{ width: '100%', maxWidth: '500px' }}>
+        {/* Header Profissional */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <img 
+            src="/Logo.png" 
+            alt="MetrIA Logo" 
+            style={{ 
+              height: '120px', 
+              width: 'auto',
+              filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4))',
+              marginBottom: '24px'
+            }} 
+          />
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '12px',
+            marginBottom: '16px'
+          }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)'
+            }}>
+              <Users size={24} style={{ color: '#0D0D0D' }} />
+            </div>
+            <span style={{
+              fontFamily: 'Cinzel, serif',
+              color: '#D4AF37',
+              fontSize: '32px',
+              fontWeight: '700',
+              textShadow: '0 2px 10px rgba(212, 175, 55, 0.3)'
+            }}>Mesa {session.tableNumber}</span>
           </div>
-          <p className="text-metria-white/60 text-sm mt-2">Seu maître digital está pronto</p>
+          <p style={{ 
+            color: '#F5F5F5', 
+            opacity: 0.8, 
+            fontSize: '18px',
+            fontWeight: '300'
+          }}>Seu maître digital está pronto</p>
         </div>
 
         {/* Card Principal */}
-        <div className="card-luxury text-center animate-bounce-in">
-          <div className="mb-6">
-            <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${statusInfo.bgColor} border mb-4`}>
-              <StatusIcon size={32} className={statusInfo.color} />
+        <div style={{
+          background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
+          border: '1px solid rgba(212, 175, 55, 0.3)',
+          borderRadius: '20px',
+          padding: '40px',
+          textAlign: 'center',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.7)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          {/* Decorative Elements */}
+          <div style={{
+            position: 'absolute',
+            top: '-50px',
+            right: '-50px',
+            width: '100px',
+            height: '100px',
+            background: 'radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%)',
+            borderRadius: '50%'
+          }}></div>
+          <div style={{
+            position: 'absolute',
+            bottom: '-30px',
+            left: '-30px',
+            width: '60px',
+            height: '60px',
+            background: 'radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%)',
+            borderRadius: '50%'
+          }}></div>
+          <div style={{ marginBottom: '32px', position: 'relative', zIndex: 1 }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '80px',
+              height: '80px',
+              borderRadius: '50%',
+              background: statusInfo.bgColor.replace('bg-', '').replace('/20', ', 0.2)').replace('/30', ', 0.3)'),
+              border: `2px solid ${statusInfo.color.replace('text-', '')}`,
+              marginBottom: '20px',
+              boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)'
+            }}>
+              <StatusIcon size={36} style={{ color: statusInfo.color.replace('text-', '') }} />
             </div>
             
-            <h2 className="font-serif text-gold text-2xl mb-2">{statusInfo.label}</h2>
-            <p className="text-metria-white/70">{statusInfo.description}</p>
+            <h2 style={{
+              fontFamily: 'Cinzel, serif',
+              color: '#D4AF37',
+              fontSize: '28px',
+              fontWeight: '700',
+              marginBottom: '12px',
+              textShadow: '0 2px 10px rgba(212, 175, 55, 0.3)'
+            }}>{statusInfo.label}</h2>
+            <p style={{ 
+              color: '#F5F5F5', 
+              opacity: 0.8, 
+              fontSize: '16px',
+              lineHeight: '1.5'
+            }}>{statusInfo.description}</p>
           </div>
 
           {/* Informações da Sessão */}
-          <div className="bg-metria-black/30 rounded-lg p-4 mb-6">
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-metria-white/60">Sessão:</span>
-              <span className="text-metria-white font-medium">#{session.id.slice(-6)}</span>
+          <div style={{
+            backgroundColor: 'rgba(13, 13, 13, 0.5)',
+            borderRadius: '12px',
+            padding: '20px',
+            marginBottom: '32px',
+            border: '1px solid rgba(212, 175, 55, 0.1)',
+            position: 'relative',
+            zIndex: 1
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginBottom: '12px'
+            }}>
+              <span style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '14px' }}>Sessão:</span>
+              <span style={{ 
+                color: '#D4AF37', 
+                fontWeight: '600',
+                fontFamily: 'monospace',
+                fontSize: '14px'
+              }}>#{session.id.slice(-6)}</span>
             </div>
             {session.lastActivity && (
-              <div className="flex justify-between items-center text-sm mt-2">
-                <span className="text-metria-white/60">Última atividade:</span>
-                <span className="text-metria-white/80">
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center'
+              }}>
+                <span style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '14px' }}>Última atividade:</span>
+                <span style={{ color: '#F5F5F5', opacity: 0.9, fontSize: '14px' }}>
                   {new Date(session.lastActivity).toLocaleTimeString('pt-BR')}
                 </span>
               </div>
             )}
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginTop: '12px',
+              paddingTop: '12px',
+              borderTop: '1px solid rgba(212, 175, 55, 0.1)'
+            }}>
+              <span style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '14px' }}>Criada em:</span>
+              <span style={{ color: '#F5F5F5', opacity: 0.9, fontSize: '14px' }}>
+                {new Date(session.createdAt).toLocaleString('pt-BR')}
+              </span>
+            </div>
           </div>
 
           {/* Ações */}
-          <div className="space-y-3">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative', zIndex: 1 }}>
             {(session.status === 'OPEN' || session.status === 'ORDERING') && (
               <button
                 onClick={handleStartSession}
-                className="btn-gold w-full py-4 text-lg font-semibold hover:scale-105 transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
+                  color: '#0D0D0D',
+                  border: 'none',
+                  padding: '20px 32px',
+                  borderRadius: '12px',
+                  fontSize: '18px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 6px 20px rgba(212, 175, 55, 0.4)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
+                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(212, 175, 55, 0.6)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(212, 175, 55, 0.4)';
+                }}
               >
-                {session.status === 'OPEN' ? 'Iniciar Pedido' : 'Continuar Pedido'}
+                {session.status === 'OPEN' ? '🍽️ Iniciar Pedido' : '📋 Continuar Pedido'}
               </button>
             )}
 
             {session.status === 'PAID' && (
-              <div className="space-y-3">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <button
                   onClick={() => navigate(`/order/${session.id}?token=${session.token}`)}
-                  className="btn-gold w-full py-4 text-lg font-semibold"
+                  style={{
+                    background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
+                    color: '#0D0D0D',
+                    border: 'none',
+                    padding: '20px 32px',
+                    borderRadius: '12px',
+                    fontSize: '18px',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 6px 20px rgba(212, 175, 55, 0.4)'
+                  }}
                 >
-                  Acompanhar Pedido
+                  👨‍🍳 Acompanhar Pedido
                 </button>
                 <button
                   onClick={handleStartSession}
-                  className="w-full bg-transparent border border-gold/30 text-gold py-3 rounded-lg hover:border-gold transition-all"
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: '2px solid rgba(212, 175, 55, 0.3)',
+                    color: '#D4AF37',
+                    padding: '16px 24px',
+                    borderRadius: '12px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = '#D4AF37';
+                    e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
                 >
-                  Pedir Mais
+                  🍽️ Pedir Mais
                 </button>
               </div>
             )}
 
             <button
               onClick={handleCallWaiter}
-              className="w-full bg-transparent border border-metria-emerald/30 text-metria-emerald py-3 rounded-lg hover:border-metria-emerald hover:bg-metria-emerald/10 transition-all"
+              style={{
+                backgroundColor: 'transparent',
+                border: '2px solid rgba(4, 109, 99, 0.3)',
+                color: '#046D63',
+                padding: '16px 24px',
+                borderRadius: '12px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#046D63';
+                e.currentTarget.style.backgroundColor = 'rgba(4, 109, 99, 0.1)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(4, 109, 99, 0.3)';
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
             >
-              Chamar Garçom
+              📞 Chamar Garçom
             </button>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-6">
-          <p className="text-metria-white/50 text-xs">
-            Experiência digital exclusiva para sua mesa
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
+          <p style={{ 
+            color: '#F5F5F5', 
+            opacity: 0.5, 
+            fontSize: '14px',
+            fontStyle: 'italic'
+          }}>
+            ✨ Experiência digital exclusiva para sua mesa ✨
           </p>
         </div>
       </div>
+      
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };
