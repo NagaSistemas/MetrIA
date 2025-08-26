@@ -520,6 +520,24 @@ router.delete('/menu-items/:id', async (req, res) => {
 
 // IMAGE UPLOAD ROUTE
 
+// Test Firebase Storage configuration
+router.get('/test-storage', async (req, res) => {
+  try {
+    if (!bucket) {
+      return res.json({ error: 'Bucket not initialized', bucket: null });
+    }
+    
+    const bucketName = bucket.name;
+    res.json({ 
+      success: true, 
+      bucketName,
+      message: 'Firebase Storage is configured' 
+    });
+  } catch (error: any) {
+    res.json({ error: error.message, bucket: null });
+  }
+});
+
 // Upload image to Firebase Storage
 router.post('/upload-image', upload.single('image'), async (req, res) => {
   try {

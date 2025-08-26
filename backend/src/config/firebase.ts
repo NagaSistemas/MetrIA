@@ -20,7 +20,7 @@ export const initializeFirebase = () => {
         privateKey
       }),
       databaseURL: `https://${projectId}.firebaseio.com`,
-      storageBucket: `${projectId}.appspot.com`
+      storageBucket: `${projectId}.firebasestorage.app`
     });
   }
   db = admin.firestore();
