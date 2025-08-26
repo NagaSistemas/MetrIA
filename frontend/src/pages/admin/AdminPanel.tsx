@@ -12,6 +12,7 @@ const AdminPanel: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [editingTable, setEditingTable] = useState<Table | null>(null);
   const [editTableNumber, setEditTableNumber] = useState('');
+  const [showQRModal, setShowQRModal] = useState<Table | null>(null);
   const [stats, setStats] = useState({
     totalTables: 0,
     activeTables: 0,
@@ -781,10 +782,7 @@ const AdminPanel: React.FC = () => {
                     {/* Action Buttons */}
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button
-                        onClick={() => {
-                          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&format=png&margin=20&data=${encodeURIComponent(table.qrCode)}`;
-                          window.open(qrUrl, '_blank');
-                        }}
+                        onClick={() => setShowQRModal(table)}
                         style={{
                           backgroundColor: 'rgba(139, 92, 246, 0.1)',
                           border: '1px solid rgba(139, 92, 246, 0.3)',
@@ -807,6 +805,31 @@ const AdminPanel: React.FC = () => {
                         title="Visualizar QR Code"
                       >
                         <QrCode size={18} />
+                      </button>
+                      <button
+                        onClick={() => window.open(table.qrCode, '_blank')}
+                        style={{
+                          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                          border: '1px solid rgba(16, 185, 129, 0.3)',
+                          color: '#10b981',
+                          padding: '10px',
+                          borderRadius: '10px',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
+                          e.currentTarget.style.borderColor = '#10b981';
+                          e.currentTarget.style.transform = 'scale(1.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                          e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                          e.currentTarget.style.transform = 'scale(1)';
+                        }}
+                        title="Abrir Sessão da Mesa"
+                      >
+                        🔗
                       </button>
                       <button
                         onClick={() => downloadQRCode(table)}
@@ -1667,6 +1690,120 @@ const AdminPanel: React.FC = () => {
                 }}
               >
                 Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* QR Code Modal */}
+      {showQRModal && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          backdropFilter: 'blur(8px)',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #2C2C2C 0%, #1a1a1a 100%)',
+            border: '1px solid rgba(212, 175, 55, 0.3)',
+            borderRadius: '20px',
+            padding: '40px',
+            maxWidth: '500px',
+            width: '100%',
+            textAlign: 'center',
+            boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h3 style={{
+                fontFamily: 'Cinzel, serif',
+                fontSize: '24px',
+                fontWeight: '700',
+                color: '#D4AF37',
+                margin: 0
+              }}>
+                QR Code - Mesa {showQRModal.number}
+              </h3>
+              <button
+                onClick={() => setShowQRModal(null)}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: '1px solid rgba(245, 245, 245, 0.3)',
+                  color: '#F5F5F5',
+                  padding: '8px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '18px'
+                }}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div style={{
+              backgroundColor: '#F5F5F5',
+              padding: '20px',
+              borderRadius: '12px',
+              marginBottom: '24px'
+            }}>
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=png&margin=20&data=${encodeURIComponent(showQRModal.qrCode)}`}
+                alt={`QR Code Mesa ${showQRModal.number}`}
+                style={{
+                  width: '100%',
+                  maxWidth: '300px',
+                  height: 'auto'
+                }}
+              />
+            </div>
+            
+            <p style={{ color: '#F5F5F5', opacity: 0.7, marginBottom: '24px', fontSize: '14px' }}>
+              Escaneie este código para acessar a mesa diretamente
+            </p>
+            
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <button
+                onClick={() => {
+                  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&format=png&margin=20&data=${encodeURIComponent(showQRModal.qrCode)}`;
+                  const link = document.createElement('a');
+                  link.href = qrUrl;
+                  link.download = `MetrIA-Mesa-${showQRModal.number}-QR.png`;
+                  link.click();
+                }}
+                style={{
+                  background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
+                  color: '#0D0D0D',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                📥 Baixar QR
+              </button>
+              <button
+                onClick={() => window.open(showQRModal.qrCode, '_blank')}
+                style={{
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  color: '#10b981',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                🔗 Abrir Mesa
               </button>
             </div>
           </div>
