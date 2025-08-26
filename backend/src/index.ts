@@ -7,6 +7,7 @@ import kitchenRoutes from './routes/kitchen';
 import adminRoutes from './routes/admin';
 import aiRoutes from './routes/ai';
 import waiterRoutes from './routes/waiter';
+import paymentRoutes from './routes/payment';
 
 import path from 'path';
 import fs from 'fs';
@@ -36,6 +37,7 @@ app.use('/api/kitchen', kitchenRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/call-waiter', waiterRoutes);
+app.use('/api/payment', paymentRoutes);
 
 
 app.get('/health', (req, res) => {

@@ -8,6 +8,7 @@ interface TableContextType {
   addToCart: (item: MenuItem, quantity: number, notes?: string) => void;
   removeFromCart: (menuItemId: string) => void;
   clearCart: () => void;
+  setCart: React.Dispatch<React.SetStateAction<OrderItem[]>>;
   loadSession: (restaurantId: string, tableId: string, token: string) => Promise<void>;
   loadSessionById: (sessionId: string, token: string) => Promise<void>;
 }
@@ -37,7 +38,14 @@ export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             : cartItem
         );
       }
-      return [...prev, { menuItemId: item.id, quantity, notes, price: item.price }];
+      return [...prev, { 
+        menuItemId: item.id, 
+        quantity, 
+        notes, 
+        price: item.price,
+        name: item.name,
+        image: item.image
+      }];
     });
   };
 
@@ -89,6 +97,7 @@ export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       addToCart,
       removeFromCart,
       clearCart,
+      setCart,
       loadSession,
       loadSessionById
     }}>

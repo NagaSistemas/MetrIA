@@ -32,6 +32,7 @@ export interface MenuItem {
   description: string;
   price: number;
   category: string;
+  categoryIcon?: string;
   image?: string;
   available: boolean;
 }
@@ -53,6 +54,8 @@ export interface OrderItem {
   quantity: number;
   notes?: string;
   price: number;
+  name?: string;
+  image?: string;
 }
 
 export interface WaiterCall {

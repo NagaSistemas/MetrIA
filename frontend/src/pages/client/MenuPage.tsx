@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTable } from '../../contexts/TableContext';
-import { Phone, Users, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import AIChat from '../../components/shared/AIChat';
 
 const MenuPage: React.FC = () => {
@@ -48,17 +48,7 @@ const MenuPage: React.FC = () => {
   const cartTotal = (cart || []).reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const cartItemCount = (cart || []).reduce((sum, item) => sum + item.quantity, 0);
 
-  const handleCallWaiter = async () => {
-    try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/call-waiter`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId: session?.id, message: 'Cliente solicitou atendimento' })
-      });
-    } catch (error) {
-      console.error('Error calling waiter:', error);
-    }
-  };
+
 
   if (isLoading) {
     return (
@@ -151,61 +141,63 @@ const MenuPage: React.FC = () => {
           maxWidth: '1200px',
           margin: '0 auto'
         }}>
-          <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
-            <img 
-              src="/Logo.png" 
-              alt="MetrIA" 
-              className="logo"
-              style={{ 
-                height: '56px', 
-                width: 'auto',
-                filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4))'
-              }} 
-            />
-            <div className="table-info" style={{ 
-              display: 'flex', 
-              flexDirection: 'column',
-              gap: '4px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{
-                  backgroundColor: 'rgba(212, 175, 55, 0.15)',
-                  padding: '6px',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(212, 175, 55, 0.3)'
-                }}>
-                  <Users size={16} style={{ color: '#D4AF37' }} />
-                </div>
-                <span style={{ 
-                  fontFamily: 'Cinzel, serif', 
-                  color: '#D4AF37', 
-                  fontWeight: '700',
-                  fontSize: '18px'
-                }}>
-                  Mesa {session?.tableNumber || 'Demo'}
-                </span>
-              </div>
-              {cartItemCount > 0 && (
-                <div className="cart-badge" style={{
-                  background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
-                  color: '#0D0D0D',
-                  padding: '4px 12px',
-                  borderRadius: '16px',
-                  fontSize: '12px',
-                  fontWeight: '700',
-                  boxShadow: '0 4px 12px rgba(212, 175, 55, 0.4)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  width: 'fit-content'
-                }}>
-                  <Users size={12} /> {cartItemCount} na mesa
-                </div>
-              )}
-            </div>
+          {/* Mesa - Esquerda */}
+          <div style={{ 
+            fontFamily: 'Cinzel, serif', 
+            color: '#D4AF37', 
+            fontWeight: '700',
+            fontSize: '18px'
+          }}>
+            Mesa {(session as any)?.tableNumber || session?.tableId?.slice(-3) || 'Demo'}
           </div>
           
-
+          {/* Logo - Centro */}
+          <img 
+            src="/Logo.png" 
+            alt="MetrIA" 
+            className="logo"
+            style={{ 
+              height: '80px', 
+              width: 'auto',
+              filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4))'
+            }} 
+          />
+          
+          {/* AI Button Mobile - Direita */}
+          <div className="ai-header-mobile" style={{ display: 'none' }}>
+            <div
+              onClick={() => setShowAI(!showAI)}
+              style={{
+                width: '48px',
+                height: '48px',
+                background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
+                borderRadius: '50%',
+                cursor: 'pointer',
+                boxShadow: '0 0 0 0 rgba(212, 175, 55, 0.7)',
+                animation: 'aiPulse 2s infinite',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.3s ease',
+                position: 'relative'
+              }}
+            >
+              <img src="/Agent.png" alt="IA" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+              
+              {/* Indicator */}
+              <div style={{
+                position: 'absolute',
+                top: '-2px',
+                right: '-2px',
+                width: '12px',
+                height: '12px',
+                backgroundColor: '#ef4444',
+                borderRadius: '50%',
+                animation: 'pulse 2s infinite',
+                border: '2px solid #0D0D0D'
+              }}></div>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -260,12 +252,10 @@ const MenuPage: React.FC = () => {
           </div>
           
           <div className="categories-container" style={{ 
-            display: 'flex', 
-            gap: '12px', 
-            overflowX: 'auto', 
-            paddingBottom: '8px',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none'
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            gap: '8px', 
+            paddingBottom: '8px'
           }}>
             {categories.map((category) => (
               <button
@@ -273,24 +263,28 @@ const MenuPage: React.FC = () => {
                 onClick={() => setSelectedCategory(category)}
                 className="category-btn"
                 style={{
-                  padding: '14px 20px',
-                  borderRadius: '20px',
+                  padding: '8px 12px',
+                  borderRadius: '12px',
                   background: selectedCategory === category 
                     ? 'linear-gradient(135deg, #D4AF37, #B8860B)' 
                     : 'rgba(212, 175, 55, 0.1)',
                   color: selectedCategory === category ? '#0D0D0D' : '#D4AF37',
-                  fontSize: '14px',
+                  fontSize: '11px',
                   fontWeight: '600',
                   cursor: 'pointer',
-                  whiteSpace: 'nowrap',
                   transition: 'all 0.3s ease',
                   boxShadow: selectedCategory === category 
-                    ? '0 6px 20px rgba(212, 175, 55, 0.4)' 
-                    : '0 2px 8px rgba(0, 0, 0, 0.2)',
+                    ? '0 4px 15px rgba(212, 175, 55, 0.3)' 
+                    : '0 2px 8px rgba(0, 0, 0, 0.1)',
                   backdropFilter: 'blur(10px)',
                   border: selectedCategory === category 
                     ? 'none' 
-                    : '1px solid rgba(212, 175, 55, 0.2)'
+                    : '1px solid rgba(212, 175, 55, 0.2)',
+                  textAlign: 'center',
+                  minHeight: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
                 onMouseEnter={(e) => {
                   if (selectedCategory !== category) {
@@ -307,9 +301,9 @@ const MenuPage: React.FC = () => {
                   }
                 }}
               >
-                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  {category === 'all' ? '🍽️' : getCategoryIcon(category)}
-                  <span>{category === 'all' ? 'Todos' : category}</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  <span>{category === 'all' ? '🍽️' : getCategoryIcon(category, menu)}</span>
+                  <span style={{ fontSize: 'inherit', lineHeight: '1.2' }}>{category === 'all' ? 'Todos' : category}</span>
                 </span>
               </button>
             ))}
@@ -434,7 +428,7 @@ const MenuPage: React.FC = () => {
                   
                   <div style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'flex-start',
                     alignItems: 'center',
                     marginBottom: '20px'
                   }}>
@@ -444,16 +438,6 @@ const MenuPage: React.FC = () => {
                       color: '#D4AF37'
                     }}>
                       R$ {item.price.toFixed(2)}
-                    </span>
-                    <span style={{
-                      fontSize: '12px',
-                      color: '#F5F5F5',
-                      opacity: 0.6,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}>
-                      ⏱️ 15-20 min
                     </span>
                   </div>
                   
@@ -490,7 +474,7 @@ const MenuPage: React.FC = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          const currentQty = (cart || []).find(cartItem => (cartItem as any).id === item.id)?.quantity || 0;
+                          const currentQty = (cart || []).find(cartItem => cartItem.menuItemId === item.id)?.quantity || 0;
                           if (currentQty > 0) {
                             addToCart(item, -1);
                           }
@@ -531,7 +515,7 @@ const MenuPage: React.FC = () => {
                         textAlign: 'center',
                         fontFamily: 'Cinzel, serif'
                       }}>
-                        {(cart || []).find(cartItem => (cartItem as any).id === item.id)?.quantity || 0}
+                        {(cart || []).find(cartItem => cartItem.menuItemId === item.id)?.quantity || 0}
                       </span>
                       
                       <button
@@ -591,17 +575,17 @@ const MenuPage: React.FC = () => {
         </div>
       </main>
 
-      {/* AI Button */}
-      <button
+      {/* AI Button Desktop */}
+      <div
+        className="ai-desktop"
         onClick={() => setShowAI(!showAI)}
         style={{
           position: 'fixed',
           bottom: cartItemCount > 0 ? '120px' : '32px',
-          right: '32px',
-          width: '64px',
-          height: '64px',
+          right: '24px',
+          width: '56px',
+          height: '56px',
           background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
-          border: 'none',
           borderRadius: '50%',
           cursor: 'pointer',
           boxShadow: '0 8px 25px rgba(212, 175, 55, 0.4)',
@@ -620,18 +604,19 @@ const MenuPage: React.FC = () => {
           e.currentTarget.style.boxShadow = '0 8px 25px rgba(212, 175, 55, 0.4)';
         }}
       >
-        <img src="/Agent.png" alt="IA" style={{ width: '32px', height: '32px' }} />
+        <img src="/Agent.png" alt="IA" style={{ width: '28px', height: '28px', borderRadius: '50%' }} />
         <div style={{
           position: 'absolute',
-          top: '-4px',
-          right: '-4px',
-          width: '12px',
-          height: '12px',
+          top: '-2px',
+          right: '-2px',
+          width: '14px',
+          height: '14px',
           backgroundColor: '#ef4444',
           borderRadius: '50%',
-          animation: 'pulse 2s infinite'
+          animation: 'pulse 2s infinite',
+          border: '2px solid #0D0D0D'
         }}></div>
-      </button>
+      </div>
 
       {/* Cart Summary Premium */}
       {cartItemCount > 0 && (
@@ -652,9 +637,10 @@ const MenuPage: React.FC = () => {
             margin: '0 auto',
             display: 'flex', 
             justifyContent: 'space-between', 
-            alignItems: 'center'
+            alignItems: 'center',
+            gap: '16px'
           }}>
-            <div className="cart-info" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div className="cart-info" style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
               <div style={{ position: 'relative' }}>
                 <div style={{
                   background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
@@ -663,7 +649,7 @@ const MenuPage: React.FC = () => {
                   borderRadius: '16px',
                   boxShadow: '0 6px 20px rgba(212, 175, 55, 0.4)'
                 }}>
-                  <Users size={24} />
+                  <span style={{ fontSize: '20px', fontWeight: 'bold' }}>$</span>
                 </div>
                 <span style={{
                   position: 'absolute',
@@ -685,15 +671,6 @@ const MenuPage: React.FC = () => {
               </div>
               <div className="cart-details">
                 <p style={{ 
-                  fontSize: '14px', 
-                  color: '#F5F5F5', 
-                  margin: 0, 
-                  fontWeight: '500',
-                  opacity: 0.8
-                }}>
-                  {cartItemCount} {cartItemCount === 1 ? 'item' : 'itens'} na mesa
-                </p>
-                <p style={{ 
                   fontSize: '20px', 
                   fontWeight: '700', 
                   color: '#D4AF37', 
@@ -711,14 +688,16 @@ const MenuPage: React.FC = () => {
                 background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
                 color: '#0D0D0D',
                 border: 'none',
-                padding: '16px 28px',
+                padding: '16px 20px',
                 borderRadius: '16px',
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: '700',
                 cursor: 'pointer',
                 boxShadow: '0 6px 20px rgba(212, 175, 55, 0.4)',
                 transition: 'all 0.3s ease',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                minWidth: '120px',
+                maxWidth: '160px'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-3px)';
@@ -862,6 +841,17 @@ const MenuPage: React.FC = () => {
           90% { transform: translateY(-2px); }
         }
         
+        @keyframes aiPulse {
+          0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+          70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+        
+        @keyframes tooltipFloat {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-3px); }
+        }
+        
         /* Mobile Responsive */
         @media (max-width: 768px) {
           .menu-header {
@@ -880,7 +870,15 @@ const MenuPage: React.FC = () => {
           }
           
           .logo {
-            height: 40px !important;
+            height: 56px !important;
+          }
+          
+          .ai-header-mobile {
+            display: flex !important;
+          }
+          
+          .ai-desktop {
+            display: none !important;
           }
           
           .table-info {
@@ -908,14 +906,16 @@ const MenuPage: React.FC = () => {
           }
           
           .categories-container {
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
             gap: 6px !important;
             padding-bottom: 4px !important;
           }
           
           .category-btn {
-            padding: 8px 12px !important;
-            font-size: 12px !important;
-            white-space: nowrap !important;
+            padding: 6px 4px !important;
+            font-size: 10px !important;
+            border-radius: 10px !important;
+            min-height: 32px !important;
           }
           
           .menu-main {
@@ -964,7 +964,7 @@ const MenuPage: React.FC = () => {
           }
           
           .logo {
-            height: 36px !important;
+            height: 48px !important;
           }
           
           .table-info span {
@@ -982,9 +982,16 @@ const MenuPage: React.FC = () => {
             font-size: 14px !important;
           }
           
+          .categories-container {
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)) !important;
+            gap: 4px !important;
+          }
+          
           .category-btn {
-            padding: 6px 10px !important;
-            font-size: 11px !important;
+            padding: 4px 2px !important;
+            font-size: 9px !important;
+            border-radius: 8px !important;
+            min-height: 28px !important;
           }
           
           .menu-main {
@@ -1030,7 +1037,15 @@ const MenuPage: React.FC = () => {
 };
 
 // Helper function for category icons
-const getCategoryIcon = (category: string) => {
+const getCategoryIcon = (category: string, menuItems?: any[]) => {
+  // Primeiro tenta pegar o ícone do item do menu
+  const menuItem = menuItems?.find(item => item.category === category);
+  
+  if (menuItem?.categoryIcon) {
+    return menuItem.categoryIcon;
+  }
+  
+  // Fallback para ícones padrão
   const icons: { [key: string]: string } = {
     'Entradas': '🥗',
     'Pratos Principais': '🍖',

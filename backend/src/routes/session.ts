@@ -39,10 +39,14 @@ router.get('/by-id/:sessionId', async (req, res) => {
       .where('available', '==', true)
       .get();
 
-    const menu = menuSnapshot.docs.map((doc: any) => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const menu = menuSnapshot.docs.map((doc: any) => {
+      const data = doc.data();
+      console.log('Menu item data:', data); // Debug
+      return {
+        id: doc.id,
+        ...data
+      };
+    });
 
     console.log('RETURNING SESSION WITH MENU:', menu.length, 'items');
 
