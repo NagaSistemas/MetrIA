@@ -131,8 +131,44 @@ router.get('/by-id/:sessionId', async (req, res) => {
         });
       }
       
-      console.log('Session not found anywhere');
-      return res.status(404).json({ error: 'Sessão não encontrada' });
+      console.log('Session not found anywhere, creating new session');
+      
+      // Create a new session as fallback
+      const newSessionId = sessionId;
+      const newToken = token as string;
+      
+      const newSession = {
+        id: newSessionId,
+        tableId: 'fallback-table',
+        restaurantId: 'default',
+        status: 'OPEN',
+        token: newToken,
+        createdAt: new Date(),
+        orders: [],
+        waiterCalls: [],
+        tableNumber: 1
+      };
+      
+      // Save the new session
+      await db.collection('sessions').doc(newSessionId).set(newSession);
+      console.log('Created fallback session:', newSessionId);
+      
+      // Get menu
+      const menuSnapshot = await db.collection('menuItems')
+        .where('available', '==', true)
+        .get();
+
+      const menu = menuSnapshot.docs.map((doc: any) => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      console.log('Returning fallback session with', menu.length, 'menu items');
+      
+      return res.json({
+        session: newSession,
+        menu
+      });
     }
     
     console.log('Session found in sessions collection');
