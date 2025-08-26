@@ -393,7 +393,12 @@ const MenuManagement: React.FC = () => {
               {editingCategory ? 'Editar Categoria' : 'Nova Categoria'}
             </h3>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', gap: '16px', alignItems: 'end' }}>
+            <div className="category-form-grid" style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr auto auto auto', 
+              gap: '16px', 
+              alignItems: 'end' 
+            }}>
               <div>
                 <label style={{ 
                   display: 'block', 
@@ -591,7 +596,7 @@ const MenuManagement: React.FC = () => {
           </div>
 
           {/* Enhanced Categories Grid */}
-          <div style={{
+          <div className="categories-grid" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
             gap: '20px'
@@ -1402,6 +1407,42 @@ const MenuManagement: React.FC = () => {
         </div>
       )}
     </div>
+    
+    <style>{`
+      /* Mobile Responsive Styles for Category Form */
+      @media (max-width: 768px) {
+        .category-form-grid {
+          grid-template-columns: 1fr !important;
+          gap: 20px !important;
+          align-items: stretch !important;
+        }
+        
+        .categories-grid {
+          grid-template-columns: 1fr !important;
+          gap: 16px !important;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .category-form-grid {
+          gap: 16px !important;
+        }
+        
+        .category-form-grid > div:nth-child(2) {
+          order: 2;
+        }
+        
+        .category-form-grid > button:nth-child(3) {
+          order: 3;
+          width: 100% !important;
+        }
+        
+        .category-form-grid > button:nth-child(4) {
+          order: 4;
+          width: 100% !important;
+        }
+      }
+    `}</style>
   );
 };
 

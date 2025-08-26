@@ -317,6 +317,7 @@ const AdminPanel: React.FC = () => {
                 localStorage.removeItem('adminActiveTab');
                 navigate('/admin/login');
               }}
+              className="logout-button"
               style={{
                 position: 'absolute',
                 top: '20px',
@@ -332,7 +333,8 @@ const AdminPanel: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                zIndex: 10
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
@@ -343,7 +345,7 @@ const AdminPanel: React.FC = () => {
               title="Sair do sistema"
             >
               <LogOut size={16} />
-              Sair
+              <span className="logout-text">Sair</span>
             </button>
           </div>
           
@@ -406,9 +408,10 @@ const AdminPanel: React.FC = () => {
 
       {/* Main Content */}
       <main style={{
-        maxWidth: '1400px',
+        maxWidth: (activeTab === 'orders' && restaurantMode) ? 'none' : '1400px',
         margin: '0 auto',
-        padding: '32px 24px'
+        padding: (activeTab === 'orders' && restaurantMode) ? '32px 16px' : '32px 24px',
+        width: (activeTab === 'orders' && restaurantMode) ? '100vw' : 'auto'
       }}>
         {/* Dashboard */}
         {activeTab === 'dashboard' && (
@@ -1410,13 +1413,19 @@ const AdminPanel: React.FC = () => {
             )}
 
             {/* Orders List */}
-            <div style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              gap: '16px',
-              marginTop: restaurantMode ? '-200px' : '0',
-              transition: 'all 0.5s ease 0.2s'
-            }}>
+            <div 
+              className={restaurantMode ? 'restaurant-mode-grid' : ''}
+              style={{ 
+                display: restaurantMode ? 'grid' : 'flex',
+                gridTemplateColumns: restaurantMode ? 'repeat(auto-fit, minmax(500px, 1fr))' : 'none',
+                flexDirection: restaurantMode ? 'initial' : 'column',
+                gap: restaurantMode ? '32px' : '16px',
+                marginTop: restaurantMode ? '-200px' : '0',
+                transition: 'all 0.5s ease 0.2s',
+                padding: restaurantMode ? '24px' : '0',
+                maxWidth: restaurantMode ? 'none' : '1400px',
+                margin: restaurantMode ? '0' : '0 auto'
+              }}>
               {orders.length === 0 ? (
                 <div style={{
                   backgroundColor: '#2C2C2C',
@@ -1456,12 +1465,19 @@ const AdminPanel: React.FC = () => {
                 orders
                   .filter(order => statusFilter === 'all' || order.status === statusFilter)
                   .map(order => (
-                    <OrderCard
+                    <div 
                       key={order.id}
-                      order={order}
-                      onUpdateStatus={updateOrderStatus}
-                      onCancelOrder={cancelOrder}
-                    />
+                      style={{
+                        transform: restaurantMode ? 'scale(1.05)' : 'scale(1)',
+                        transition: 'transform 0.3s ease'
+                      }}
+                    >
+                      <OrderCard
+                        order={order}
+                        onUpdateStatus={updateOrderStatus}
+                        onCancelOrder={cancelOrder}
+                      />
+                    </div>
                   ))
               )}
             </div>
@@ -1762,6 +1778,36 @@ const AdminPanel: React.FC = () => {
           to {
             transform: translateX(0);
             opacity: 1;
+          }
+        }
+        
+        /* Restaurant Mode Styles */
+        @media (min-width: 1200px) {
+          .restaurant-mode-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 32px !important;
+          }
+        }
+        
+        @media (min-width: 1600px) {
+          .restaurant-mode-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 40px !important;
+          }
+        }
+        
+        /* Logout Button Mobile Styles */
+        @media (max-width: 768px) {
+          .logout-button {
+            position: fixed !important;
+            top: 16px !important;
+            right: 16px !important;
+            padding: 10px !important;
+            z-index: 1001 !important;
+          }
+          
+          .logout-text {
+            display: none !important;
           }
         }
         
