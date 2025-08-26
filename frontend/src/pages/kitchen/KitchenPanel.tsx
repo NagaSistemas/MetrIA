@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { Order, WaiterCall } from '../../../shared/types';
+import type { Order, WaiterCall } from '../../../../shared/types';
 import { Clock, AlertCircle, CheckCircle, ChefHat, Bell, Users, Timer, Flame } from 'lucide-react';
 
 const KitchenPanel: React.FC = () => {

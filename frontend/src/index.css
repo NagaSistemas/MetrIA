@@ -167,6 +167,10 @@ h1, h2, h3 {
   70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
 }
 
+.animate-pulse-gold {
+  animation: pulse-gold 2s infinite;
+}
+
 /* Classes de cores faltantes */
 .text-metria-white { color: var(--metria-white); }
 .text-metria-black { color: var(--metria-black); }

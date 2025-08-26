@@ -1,10 +1,13 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { TableProvider } from './contexts/TableContext';
-import TableSessionPage from './pages/TableSessionPage';
-import MenuPage from './pages/MenuPage';
-import KitchenPanel from './pages/KitchenPanel';
-import AdminPanel from './pages/AdminPanel';
+import TableSessionPage from './pages/client/TableSessionPage';
+import MenuPage from './pages/client/MenuPage';
+import ItemDetailPage from './pages/client/ItemDetailPage';
+import TrayPage from './pages/client/TrayPage';
+import CheckoutPage from './pages/client/CheckoutPage';
+import KitchenPanel from './pages/kitchen/KitchenPanel';
+import AdminPanel from './pages/admin/AdminPanel';
 
 function App() {
   return (
@@ -13,6 +16,9 @@ function App() {
         <Routes>
           <Route path="/m/:restaurantId/:tableId" element={<TableSessionPage />} />
           <Route path="/menu" element={<MenuPage />} />
+          <Route path="/item/:itemId" element={<ItemDetailPage />} />
+          <Route path="/tray" element={<TrayPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/kitchen" element={<KitchenPanel />} />
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/" element={
