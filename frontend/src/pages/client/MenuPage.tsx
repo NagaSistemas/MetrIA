@@ -17,8 +17,18 @@ const MenuPage: React.FC = () => {
 
   useEffect(() => {
     if (sessionId && token) {
-      loadSessionById(sessionId, token).finally(() => setIsLoading(false));
+      console.log('Loading session:', sessionId, token);
+      loadSessionById(sessionId, token)
+        .then(() => {
+          console.log('Session loaded:', session);
+          console.log('Menu items:', menu);
+        })
+        .catch(error => {
+          console.error('Error loading session:', error);
+        })
+        .finally(() => setIsLoading(false));
     } else {
+      console.log('No sessionId or token provided');
       setTimeout(() => setIsLoading(false), 1000);
     }
   }, [sessionId, token]);
@@ -83,7 +93,7 @@ const MenuPage: React.FC = () => {
     );
   }
 
-  if (!session && sessionId) {
+  if (!session && sessionId && !isLoading) {
     return (
       <div style={{
         minHeight: '100vh',
@@ -110,7 +120,11 @@ const MenuPage: React.FC = () => {
           }}>
             Sessão não encontrada
           </h2>
-          <p style={{ color: '#F5F5F5', opacity: 0.7 }}>Verifique o QR Code da mesa</p>
+          <p style={{ color: '#F5F5F5', opacity: 0.7, marginBottom: '16px' }}>Verifique o QR Code da mesa</p>
+          <div style={{ fontSize: '12px', color: '#F5F5F5', opacity: 0.5 }}>
+            Debug: SessionId: {sessionId}<br/>
+            Token: {token?.slice(0, 8)}...
+          </div>
         </div>
       </div>
     );
@@ -293,9 +307,20 @@ const MenuPage: React.FC = () => {
               color: '#D4AF37', 
               marginBottom: '12px' 
             }}>
-              Voltamos já com novidades!
+              {menu.length === 0 ? 'Cardápio em preparação' : 'Voltamos já com novidades!'}
             </h3>
-            <p style={{ color: '#F5F5F5', opacity: 0.7 }}>Não encontramos itens para sua busca.</p>
+            <p style={{ color: '#F5F5F5', opacity: 0.7 }}>
+              {menu.length === 0 
+                ? 'Nosso chef está preparando deliciosas opções para você.' 
+                : 'Não encontramos itens para sua busca.'}
+            </p>
+            {menu.length === 0 && (
+              <div style={{ marginTop: '24px', fontSize: '14px', color: '#F5F5F5', opacity: 0.5 }}>
+                Debug: Session ID: {sessionId}<br/>
+                Menu items: {menu.length}<br/>
+                Categories: {categories.length}
+              </div>
+            )}
           </div>
         ) : (
           <div style={{
