@@ -1505,6 +1505,7 @@ const AdminPanel: React.FC = () => {
             {/* Restaurant Mode Toggle - Fixed at bottom */}
             <button
               onClick={() => setRestaurantMode(!restaurantMode)}
+              className="restaurant-mode-toggle"
               style={{
                 position: 'fixed',
                 bottom: '20px',
@@ -1823,6 +1824,13 @@ const AdminPanel: React.FC = () => {
             margin: 16px auto 0 auto !important;
             width: fit-content !important;
             padding: 12px 20px !important;
+          }
+        }
+        
+        /* Restaurant Mode Toggle Mobile */
+        @media (max-width: 768px) {
+          .restaurant-mode-toggle {
+            display: none !important;
           }
         }
         
