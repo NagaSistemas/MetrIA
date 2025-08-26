@@ -554,29 +554,46 @@ const CheckoutPage: React.FC = () => {
         {/* Botão de Teste */}
         <button
           onClick={async () => {
+            console.log('=== CHECKOUT DEBUG ===');
+            console.log('SessionId:', sessionId);
+            console.log('Total:', total);
+            console.log('Cart items:', cart);
+            console.log('API URL:', import.meta.env.VITE_API_URL);
+            
             try {
+              const payload = {
+                sessionId,
+                amount: total,
+                itemCount: cart.length
+              };
+              
+              console.log('Sending payload:', payload);
+              
               const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payment/pix`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  sessionId,
-                  amount: total,
-                  items: cart
-                })
+                body: JSON.stringify(payload)
               });
               
+              console.log('Response status:', response.status);
+              console.log('Response headers:', response.headers);
+              
               const data = await response.json();
+              console.log('Response data:', data);
               
               if (data.success) {
+                console.log('Payment successful!');
                 setPaymentStatus('success');
-                // Limpar carrinho local
                 localStorage.removeItem('cart');
                 setTimeout(() => {
                   window.location.reload();
                 }, 2000);
+              } else {
+                console.error('Payment failed:', data);
               }
             } catch (error) {
               console.error('Error simulating payment:', error);
+              console.log('Full error:', error);
             }
           }}
           style={{

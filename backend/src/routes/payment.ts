@@ -7,7 +7,7 @@ const router = Router();
 // Simular pagamento PIX
 router.post('/pix', async (req, res) => {
   try {
-    const { sessionId, amount, items } = req.body;
+    const { sessionId, amount, itemCount } = req.body;
 
     // Buscar dados da sessão
     const sessionDoc = await db.collection('sessions').doc(sessionId).get();
@@ -19,12 +19,7 @@ router.post('/pix', async (req, res) => {
       id: orderId,
       sessionId,
       tableNumber: sessionData?.tableNumber || 1,
-      items: items.map((item: any) => ({
-        menuItemId: item.menuItemId,
-        quantity: item.quantity,
-        price: item.price,
-        name: item.name
-      })),
+      items: [],
       total: amount,
       status: 'PENDING',
       paymentStatus: 'PAID',
@@ -45,6 +40,7 @@ router.post('/pix', async (req, res) => {
 
     // Salvar pedido
     await db.collection('orders').doc(orderId).set(order);
+    console.log('Order created:', order);
 
     res.json({ success: true, orderId });
   } catch (error) {
