@@ -308,49 +308,30 @@ const TableSessionPage: React.FC = () => {
       <div style={{ width: '100%', maxWidth: '500px' }}>
         {/* Header Profissional */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <img 
-            src="/Logo.png" 
-            alt="MetrIA Logo" 
-            style={{ 
-              height: '120px', 
-              width: 'auto',
-              filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4))',
-              marginBottom: '24px'
-            }} 
-          />
           <div style={{ 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
-            gap: '12px',
+            gap: '16px',
             marginBottom: '16px'
           }}>
-            <div style={{
-              width: '48px',
-              height: '48px',
-              background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)'
-            }}>
-              <Users size={24} style={{ color: '#0D0D0D' }} />
-            </div>
+            <img 
+              src="/Logo.png" 
+              alt="MetrIA Logo" 
+              style={{ 
+                height: '140px', 
+                width: 'auto',
+                filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4))'
+              }} 
+            />
             <span style={{
               fontFamily: 'Cinzel, serif',
               color: '#D4AF37',
-              fontSize: '32px',
+              fontSize: '36px',
               fontWeight: '700',
               textShadow: '0 2px 10px rgba(212, 175, 55, 0.3)'
             }}>Mesa {session.tableNumber}</span>
           </div>
-          <p style={{ 
-            color: '#F5F5F5', 
-            opacity: 0.8, 
-            fontSize: '18px',
-            fontWeight: '300'
-          }}>Seu maître digital está pronto</p>
         </div>
 
         {/* Card Principal */}
@@ -451,19 +432,21 @@ const TableSessionPage: React.FC = () => {
                 </span>
               </div>
             )}
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center',
-              marginTop: '12px',
-              paddingTop: '12px',
-              borderTop: '1px solid rgba(212, 175, 55, 0.1)'
-            }}>
-              <span style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '14px' }}>Criada em:</span>
-              <span style={{ color: '#F5F5F5', opacity: 0.9, fontSize: '14px' }}>
-                {new Date(session.createdAt).toLocaleString('pt-BR')}
-              </span>
-            </div>
+            {session.createdAt && (
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                marginTop: '12px',
+                paddingTop: '12px',
+                borderTop: '1px solid rgba(212, 175, 55, 0.1)'
+              }}>
+                <span style={{ color: '#F5F5F5', opacity: 0.7, fontSize: '14px' }}>Criada em:</span>
+                <span style={{ color: '#F5F5F5', opacity: 0.9, fontSize: '14px' }}>
+                  {new Date(session.createdAt).toLocaleString('pt-BR')}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Ações */}
@@ -544,36 +527,7 @@ const TableSessionPage: React.FC = () => {
               </div>
             )}
 
-            <button
-              onClick={handleCallWaiter}
-              style={{
-                backgroundColor: 'transparent',
-                border: '2px solid rgba(4, 109, 99, 0.3)',
-                color: '#046D63',
-                padding: '16px 24px',
-                borderRadius: '12px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#046D63';
-                e.currentTarget.style.backgroundColor = 'rgba(4, 109, 99, 0.1)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(4, 109, 99, 0.3)';
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              📞 Chamar Garçom
-            </button>
+
           </div>
         </div>
 
