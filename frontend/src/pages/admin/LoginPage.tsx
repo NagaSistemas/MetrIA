@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock, User } from 'lucide-react';
+import { Lock, User } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -175,13 +175,13 @@ const LoginPage: React.FC = () => {
                 }}
               />
               <input
-                type={showPassword ? 'text' : 'password'}
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="login-input password-input"
+                className="login-input"
                 style={{
                   width: '100%',
-                  padding: '16px 48px 16px 48px',
+                  padding: '16px 16px 16px 48px',
                   backgroundColor: '#0D0D0D',
                   border: '1px solid rgba(212, 175, 55, 0.3)',
                   borderRadius: '12px',
@@ -201,27 +201,7 @@ const LoginPage: React.FC = () => {
                 placeholder="Digite sua senha"
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="password-toggle"
-                style={{
-                  position: 'absolute',
-                  right: '16px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'none',
-                  border: 'none',
-                  color: '#D4AF37',
-                  cursor: 'pointer',
-                  opacity: 0.7,
-                  transition: 'opacity 0.3s ease'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                onMouseLeave={(e) => e.currentTarget.style.opacity = '0.7'}
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
+
             </div>
           </div>
 
@@ -369,8 +349,49 @@ const LoginPage: React.FC = () => {
           to { transform: rotate(360deg); }
         }
         
-        /* Mobile Responsive Styles */
-        @media (max-width: 768px) {
+        /* Ultra Small Mobile (below 400px) */
+        @media (max-width: 399px) {
+          .login-container {
+            padding: 8px !important;
+            padding-top: 20px !important;
+          }
+          
+          .login-card {
+            padding: 20px 16px !important;
+            border-radius: 16px !important;
+          }
+          
+          .login-logo {
+            height: 120px !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .login-title {
+            font-size: 16px !important;
+            margin-bottom: 6px !important;
+          }
+          
+          .login-input {
+            padding: 14px 14px 14px 42px !important;
+            font-size: 15px !important;
+          }
+          
+          .password-input {
+            padding: 14px 42px 14px 42px !important;
+          }
+          
+          .password-toggle {
+            right: 6px !important;
+          }
+          
+          .login-button {
+            padding: 16px !important;
+            font-size: 15px !important;
+          }
+        }
+        
+        /* Standard Mobile (400px - 645px) */
+        @media (min-width: 400px) and (max-width: 645px) {
           .login-container {
             padding: 16px !important;
             align-items: flex-start !important;
@@ -424,7 +445,7 @@ const LoginPage: React.FC = () => {
           }
           
           .password-toggle {
-            right: 12px !important;
+            right: 8px !important;
             top: 50% !important;
             transform: translateY(-50%) !important;
             z-index: 10 !important;
@@ -460,34 +481,160 @@ const LoginPage: React.FC = () => {
           }
         }
         
-        @media (max-width: 480px) {
+        /* Large Mobile/Small Tablet (646px - 768px) */
+        @media (min-width: 646px) and (max-width: 768px) {
           .login-container {
-            padding: 12px !important;
-            padding-top: 30px !important;
+            padding: 16px !important;
+            align-items: flex-start !important;
+            padding-top: 40px !important;
           }
           
           .login-card {
-            padding: 28px 20px !important;
+            padding: 32px 24px !important;
+            margin: 0 !important;
+            border-radius: 20px !important;
+            max-width: none !important;
+            width: 100% !important;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6) !important;
+          }
+          
+          .login-header {
+            margin-bottom: 32px !important;
           }
           
           .login-logo {
-            height: 180px !important;
+            height: 200px !important;
+            margin-bottom: 20px !important;
           }
           
           .login-title {
-            font-size: 18px !important;
+            font-size: 20px !important;
+            margin-bottom: 8px !important;
+            line-height: 1.2 !important;
+          }
+          
+          .login-subtitle {
+            display: none !important;
+          }
+          
+          .login-form {
+            gap: 20px !important;
+          }
+          
+          .login-input-group {
+            margin-bottom: 20px !important;
           }
           
           .login-input {
-            padding: 15px 15px 15px 45px !important;
+            padding: 16px 16px 16px 48px !important;
+            font-size: 16px !important;
+            border-radius: 12px !important;
           }
           
           .password-input {
-            padding: 15px 45px 15px 45px !important;
+            padding: 16px 48px 16px 48px !important;
+          }
+          
+          .password-toggle {
+            right: 8px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            z-index: 10 !important;
+            position: absolute !important;
+          }
+          
+          .checkbox-container {
+            align-items: center !important;
+            gap: 12px !important;
+          }
+          
+          .checkbox-input {
+            width: 18px !important;
+            height: 18px !important;
+            margin-right: 0 !important;
+          }
+          
+          .login-checkbox-group {
+            margin-bottom: 24px !important;
+          }
+          
+          .login-button {
+            padding: 18px !important;
+            font-size: 16px !important;
+            border-radius: 12px !important;
+            margin-bottom: 24px !important;
           }
           
           .demo-info {
-            padding: 14px !important;
+            padding: 16px !important;
+            margin-top: 24px !important;
+            border-radius: 12px !important;
+          }
+        }
+        
+          .login-container {
+            padding: 20px !important;
+            align-items: center !important;
+            padding-top: 60px !important;
+          }
+          
+          .login-card {
+            padding: 40px 32px !important;
+            max-width: 450px !important;
+          }
+          
+          .login-logo {
+            height: 120px !important;
+            margin-bottom: 20px !important;
+          }
+          
+          .login-title {
+            font-size: 24px !important;
+            margin-bottom: 8px !important;
+          }
+          
+          .login-subtitle {
+            display: block !important;
+            font-size: 14px !important;
+          }
+          
+          .login-input {
+            padding: 16px 16px 16px 48px !important;
+            font-size: 16px !important;
+          }
+          
+          .password-input {
+            padding: 16px 48px 16px 48px !important;
+          }
+          
+          .password-toggle {
+            right: 12px !important;
+          }
+        }
+        
+        /* Tablet and Desktop (above 768px) */
+        @media (min-width: 769px) {
+          .login-container {
+            padding: 20px !important;
+            align-items: center !important;
+          }
+          
+          .login-card {
+            max-width: 400px !important;
+            padding: 48px !important;
+          }
+          
+          .login-logo {
+            height: 80px !important;
+          }
+          
+          .login-title {
+            font-size: 28px !important;
+          }
+          
+          .login-subtitle {
+            display: block !important;
+            font-size: 14px !important;
           }
         }
       `}</style>
