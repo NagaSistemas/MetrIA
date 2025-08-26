@@ -151,7 +151,7 @@ const AdminPanel: React.FC = () => {
   };
 
   const deleteTable = async (table: Table) => {
-    if (!confirm(`Tem certeza que deseja deletar a Mesa ${table.number}?`)) return;
+    if (!confirm(`⚠️ ATENÇÃO: Tem certeza que deseja deletar a Mesa ${table.number}?\n\n🚨 O QR Code desta mesa será PERDIDO PERMANENTEMENTE e não poderá ser recuperado!\n\nEsta ação é IRREVERSÍVEL.`)) return;
     
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/tables/${table.id}`, {

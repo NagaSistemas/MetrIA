@@ -88,18 +88,25 @@ router.post('/tables/generate', async (req, res) => {
 
     const batch = db.batch();
     
+    // Get existing tables to determine next number
+    const existingTablesSnapshot = await db.collection('tables').get();
+    const existingNumbers = existingTablesSnapshot.docs.map((doc: any) => doc.data().number);
+    const maxNumber = existingNumbers.length > 0 ? Math.max(...existingNumbers) : 0;
+    
     for (let i = 1; i <= quantity; i++) {
       const tableId = uuidv4();
+      const tableNumber = maxNumber + i;
       const qrCode = `https://metria.nagasistemas.com/m/${restaurantId}/${tableId}?t=`;
       
       const tableRef = db.collection('tables').doc(tableId);
       batch.set(tableRef, {
         id: tableId,
-        number: i,
+        number: tableNumber,
         restaurantId,
         qrCode,
         currentSession: null,
-        createdAt: new Date()
+        createdAt: new Date(),
+        qrCodeGenerated: new Date() // Track when QR was generated
       });
     }
 
