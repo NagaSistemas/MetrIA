@@ -11,9 +11,15 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onUpdateStatus, onCancelOr
   const [timeElapsed, setTimeElapsed] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeElapsed(Math.floor((Date.now() - new Date(order.createdAt).getTime()) / 1000));
-    }, 1000);
+    const updateTimer = () => {
+      const createdTime = typeof order.createdAt === 'string' 
+        ? new Date(order.createdAt).getTime() 
+        : order.createdAt.getTime();
+      setTimeElapsed(Math.floor((Date.now() - createdTime) / 1000));
+    };
+    
+    updateTimer(); // Atualiza imediatamente
+    const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
   }, [order.createdAt]);
 
@@ -130,7 +136,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onUpdateStatus, onCancelOr
                 fontSize: '14px',
                 fontWeight: '700'
               }}>
-                🏠 Mesa {order.sessionId?.slice(-3)}
+                🏠 Mesa {order.tableNumber || order.sessionId?.slice(-3)}
               </span>
               <span style={{
                 color: '#F5F5F5',
@@ -138,7 +144,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onUpdateStatus, onCancelOr
                 fontSize: '14px',
                 fontFamily: 'monospace'
               }}>
-                {new Date(order.createdAt).toLocaleString('pt-BR')}
+                {new Date(typeof order.createdAt === 'string' ? order.createdAt : order.createdAt).toLocaleString('pt-BR')}
               </span>
             </div>
             <div style={{

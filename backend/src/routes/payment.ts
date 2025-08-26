@@ -9,11 +9,16 @@ router.post('/pix', async (req, res) => {
   try {
     const { sessionId, amount, items } = req.body;
 
-    // Criar pedido simplificado
+    // Buscar dados da sessão
+    const sessionDoc = await db.collection('sessions').doc(sessionId).get();
+    const sessionData = sessionDoc.data();
+    
+    // Criar pedido único
     const orderId = uuidv4();
     const order = {
       id: orderId,
       sessionId,
+      tableNumber: sessionData?.tableNumber || 1,
       items: items.map((item: any) => ({
         menuItemId: item.menuItemId,
         quantity: item.quantity,
@@ -24,8 +29,19 @@ router.post('/pix', async (req, res) => {
       status: 'PENDING',
       paymentStatus: 'PAID',
       isExtra: false,
-      createdAt: new Date()
+      createdAt: new Date().toISOString()
     };
+
+    // Verificar se pedido já existe
+    const existingOrder = await db.collection('orders')
+      .where('sessionId', '==', sessionId)
+      .where('total', '==', amount)
+      .where('createdAt', '>', new Date(Date.now() - 30000).toISOString())
+      .get();
+    
+    if (!existingOrder.empty) {
+      return res.json({ success: true, orderId: existingOrder.docs[0].id });
+    }
 
     // Salvar pedido
     await db.collection('orders').doc(orderId).set(order);
