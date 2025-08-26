@@ -694,11 +694,13 @@ const AdminPanel: React.FC = () => {
                   }}></div>
                   
                   {/* Header */}
-                  <div style={{ 
+                  <div className="table-header" style={{ 
                     display: 'flex', 
                     justifyContent: 'space-between', 
                     alignItems: 'flex-start', 
-                    marginBottom: '24px' 
+                    marginBottom: '24px',
+                    flexWrap: 'wrap',
+                    gap: '12px'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                       <div style={{
@@ -741,22 +743,33 @@ const AdminPanel: React.FC = () => {
                     </div>
                     
                     {/* Action Buttons */}
-                    <div style={{ display: 'flex', gap: '8px' }}>
+                    <div className="table-actions" style={{ 
+                      display: 'flex', 
+                      gap: '6px',
+                      flexWrap: 'wrap',
+                      justifyContent: 'flex-end',
+                      minWidth: '0'
+                    }}>
                       <button
                         onClick={() => setShowQRModal(table)}
                         style={{
                           backgroundColor: 'rgba(139, 92, 246, 0.1)',
                           border: '1px solid rgba(139, 92, 246, 0.3)',
                           color: '#8b5cf6',
-                          padding: '10px',
-                          borderRadius: '10px',
+                          padding: '8px',
+                          borderRadius: '8px',
                           cursor: 'pointer',
-                          transition: 'all 0.3s ease'
+                          transition: 'all 0.3s ease',
+                          minWidth: '36px',
+                          height: '36px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.2)';
                           e.currentTarget.style.borderColor = '#8b5cf6';
-                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.transform = 'scale(1.05)';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.1)';
@@ -765,7 +778,7 @@ const AdminPanel: React.FC = () => {
                         }}
                         title="Visualizar QR Code"
                       >
-                        <QrCode size={18} />
+                        <QrCode size={16} />
                       </button>
                       <button
                         onClick={() => window.open(table.qrCode, '_blank')}
@@ -773,15 +786,21 @@ const AdminPanel: React.FC = () => {
                           backgroundColor: 'rgba(16, 185, 129, 0.1)',
                           border: '1px solid rgba(16, 185, 129, 0.3)',
                           color: '#10b981',
-                          padding: '10px',
-                          borderRadius: '10px',
+                          padding: '8px',
+                          borderRadius: '8px',
                           cursor: 'pointer',
-                          transition: 'all 0.3s ease'
+                          transition: 'all 0.3s ease',
+                          minWidth: '36px',
+                          height: '36px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '14px'
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
                           e.currentTarget.style.borderColor = '#10b981';
-                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.transform = 'scale(1.05)';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
@@ -798,14 +817,19 @@ const AdminPanel: React.FC = () => {
                           background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
                           color: '#0D0D0D',
                           border: 'none',
-                          padding: '10px',
-                          borderRadius: '10px',
+                          padding: '8px',
+                          borderRadius: '8px',
                           cursor: 'pointer',
                           transition: 'all 0.3s ease',
-                          boxShadow: '0 2px 8px rgba(212, 175, 55, 0.3)'
+                          boxShadow: '0 2px 8px rgba(212, 175, 55, 0.3)',
+                          minWidth: '36px',
+                          height: '36px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.transform = 'scale(1.05)';
                           e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.4)';
                         }}
                         onMouseLeave={(e) => {
@@ -814,7 +838,7 @@ const AdminPanel: React.FC = () => {
                         }}
                         title="Baixar QR Code"
                       >
-                        <Download size={18} />
+                        <Download size={16} />
                       </button>
                       <button 
                         onClick={() => startEditTable(table)}
@@ -822,15 +846,20 @@ const AdminPanel: React.FC = () => {
                           backgroundColor: 'rgba(59, 130, 246, 0.1)',
                           border: '1px solid rgba(59, 130, 246, 0.3)',
                           color: '#3b82f6',
-                          padding: '10px',
-                          borderRadius: '10px',
+                          padding: '8px',
+                          borderRadius: '8px',
                           cursor: 'pointer',
-                          transition: 'all 0.3s ease'
+                          transition: 'all 0.3s ease',
+                          minWidth: '36px',
+                          height: '36px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
                           e.currentTarget.style.borderColor = '#3b82f6';
-                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.transform = 'scale(1.05)';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
@@ -839,7 +868,7 @@ const AdminPanel: React.FC = () => {
                         }}
                         title="Editar Mesa"
                       >
-                        <Edit size={18} />
+                        <Edit size={16} />
                       </button>
                       <button 
                         onClick={() => deleteTable(table)}
@@ -847,15 +876,20 @@ const AdminPanel: React.FC = () => {
                           backgroundColor: 'rgba(239, 68, 68, 0.1)',
                           border: '1px solid rgba(239, 68, 68, 0.3)',
                           color: '#ef4444',
-                          padding: '10px',
-                          borderRadius: '10px',
+                          padding: '8px',
+                          borderRadius: '8px',
                           cursor: 'pointer',
-                          transition: 'all 0.3s ease'
+                          transition: 'all 0.3s ease',
+                          minWidth: '36px',
+                          height: '36px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
                           e.currentTarget.style.borderColor = '#ef4444';
-                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.transform = 'scale(1.05)';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
@@ -864,7 +898,7 @@ const AdminPanel: React.FC = () => {
                         }}
                         title="Deletar Mesa"
                       >
-                        <Trash2 size={18} />
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
@@ -1843,6 +1877,12 @@ const AdminPanel: React.FC = () => {
             font-size: 16px !important;
             text-align: center !important;
           }
+          .table-actions {
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+            justify-content: center !important;
+            margin-top: 8px !important;
+          }
           .mobile-card {
             margin: 0 8px !important;
             padding: 16px !important;
@@ -1866,6 +1906,26 @@ const AdminPanel: React.FC = () => {
           .mobile-flex {
             flex-direction: column !important;
             gap: 12px !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .table-header {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 16px !important;
+          }
+          .table-actions {
+            width: 100% !important;
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+            order: 2 !important;
+          }
+          .table-actions button {
+            flex: 1 !important;
+            min-width: 36px !important;
+            max-width: 44px !important;
           }
         }
       `}</style>

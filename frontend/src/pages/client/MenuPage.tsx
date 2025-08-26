@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTable } from '../../contexts/TableContext';
-import { ShoppingCart, Phone, Plus, Star, Users, Search } from 'lucide-react';
+import { Phone, Users, Search } from 'lucide-react';
 import AIChat from '../../components/shared/AIChat';
 
 const MenuPage: React.FC = () => {
@@ -132,171 +132,199 @@ const MenuPage: React.FC = () => {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#0D0D0D', color: '#F5F5F5' }}>
-      {/* Header Responsivo */}
-      <header style={{
-        background: 'linear-gradient(135deg, #2C2C2C 0%, #0D0D0D 100%)',
-        borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
-        padding: window.innerWidth < 768 ? '16px' : '24px',
+      {/* Header Profissional */}
+      <header className="menu-header" style={{
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #0D0D0D 100%)',
+        borderBottom: '2px solid rgba(212, 175, 55, 0.2)',
+        padding: '16px 20px',
         position: 'sticky',
         top: 0,
         zIndex: 50,
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.8)',
+        backdropFilter: 'blur(20px)',
+        minHeight: '80px'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div className="header-content" style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          maxWidth: '1200px',
+          margin: '0 auto'
+        }}>
+          <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
             <img 
               src="/Logo.png" 
-              alt="MetrIA Logo" 
+              alt="MetrIA" 
+              className="logo"
               style={{ 
-                height: '72px', 
+                height: '56px', 
                 width: 'auto',
-                filter: 'drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3))'
+                filter: 'drop-shadow(0 4px 12px rgba(212, 175, 55, 0.4))'
               }} 
             />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', color: '#F5F5F5', opacity: 0.8 }}>
+            <div className="table-info" style={{ 
+              display: 'flex', 
+              flexDirection: 'column',
+              gap: '4px'
+            }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Users size={18} style={{ color: '#D4AF37' }} />
-                <span style={{ fontFamily: 'Cinzel, serif', color: '#D4AF37', fontWeight: '600' }}>
-                  Mesa {session?.tableId?.slice(-3) || 'Demo'}
+                <div style={{
+                  backgroundColor: 'rgba(212, 175, 55, 0.15)',
+                  padding: '6px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(212, 175, 55, 0.3)'
+                }}>
+                  <Users size={16} style={{ color: '#D4AF37' }} />
+                </div>
+                <span style={{ 
+                  fontFamily: 'Cinzel, serif', 
+                  color: '#D4AF37', 
+                  fontWeight: '700',
+                  fontSize: '18px'
+                }}>
+                  Mesa {session?.tableNumber || 'Demo'}
                 </span>
               </div>
               {cartItemCount > 0 && (
-                <div style={{
+                <div className="cart-badge" style={{
                   background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
                   color: '#0D0D0D',
-                  padding: '6px 16px',
-                  borderRadius: '20px',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)'
+                  padding: '4px 12px',
+                  borderRadius: '16px',
+                  fontSize: '12px',
+                  fontWeight: '700',
+                  boxShadow: '0 4px 12px rgba(212, 175, 55, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  width: 'fit-content'
                 }}>
-                  🍽️ {cartItemCount} itens
+                  <Users size={12} /> {cartItemCount} na mesa
                 </div>
               )}
             </div>
           </div>
           
-          <button
-            onClick={handleCallWaiter}
-            style={{
-              background: 'transparent',
-              border: '2px solid #046D63',
-              color: '#046D63',
-              padding: '12px 20px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              fontSize: '14px',
-              fontWeight: '600',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#046D63';
-              e.currentTarget.style.color = '#F5F5F5';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(4, 109, 99, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#046D63';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            <Phone size={18} />
-            Chamar Garçom
-          </button>
+
         </div>
       </header>
 
-      {/* Search and Filters */}
-      <div style={{
-        background: 'rgba(44, 44, 44, 0.8)',
-        backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
-        padding: '20px 24px'
+      {/* Search and Filters Profissionais */}
+      <div className="filters-section" style={{
+        background: 'linear-gradient(135deg, rgba(44, 44, 44, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%)',
+        backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(212, 175, 55, 0.15)',
+        padding: '24px 20px'
       }}>
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{ position: 'relative' }}>
-            <Search size={20} style={{
-              position: 'absolute',
-              left: '16px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: '#F5F5F5',
-              opacity: 0.5
-            }} />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar pratos requintados..."
-              style={{
-                width: '100%',
-                padding: '16px 16px 16px 52px',
-                backgroundColor: '#0D0D0D',
-                border: '1px solid rgba(212, 175, 55, 0.3)',
-                borderRadius: '12px',
-                fontSize: '16px',
-                color: '#F5F5F5',
-                outline: 'none',
-                transition: 'all 0.3s ease'
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = '#D4AF37';
-                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212, 175, 55, 0.1)';
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            />
-          </div>
-        </div>
-        
-        <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '4px' }}>
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              style={{
-                padding: '12px 24px',
-                borderRadius: '25px',
-                border: selectedCategory === category ? 'none' : '1px solid rgba(212, 175, 55, 0.3)',
-                background: selectedCategory === category 
-                  ? 'linear-gradient(135deg, #D4AF37, #B8860B)' 
-                  : 'transparent',
-                color: selectedCategory === category ? '#0D0D0D' : '#D4AF37',
-                fontSize: '14px',
-                fontWeight: selectedCategory === category ? '600' : '500',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.3s ease',
-                boxShadow: selectedCategory === category ? '0 4px 15px rgba(212, 175, 55, 0.3)' : 'none'
-              }}
-              onMouseEnter={(e) => {
-                if (selectedCategory !== category) {
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div className="search-container" style={{ marginBottom: '24px' }}>
+            <div style={{ position: 'relative' }}>
+              <Search size={20} style={{
+                position: 'absolute',
+                left: '20px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: '#D4AF37',
+                opacity: 0.7
+              }} />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar pratos requintados..."
+                className="search-input"
+                style={{
+                  width: '100%',
+                  padding: '18px 20px 18px 56px',
+                  backgroundColor: 'rgba(13, 13, 13, 0.8)',
+                  border: '2px solid rgba(212, 175, 55, 0.2)',
+                  borderRadius: '16px',
+                  fontSize: '16px',
+                  color: '#F5F5F5',
+                  outline: 'none',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+                }}
+                onFocus={(e) => {
                   e.currentTarget.style.borderColor = '#D4AF37';
-                  e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedCategory !== category) {
-                  e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }
-              }}
-            >
-              {category === 'all' ? '🍽️ Todos' : `${getCategoryIcon(category)} ${category}`}
-            </button>
-          ))}
+                  e.currentTarget.style.boxShadow = '0 0 0 4px rgba(212, 175, 55, 0.1), 0 8px 32px rgba(0, 0, 0, 0.4)';
+                  e.currentTarget.style.backgroundColor = 'rgba(13, 13, 13, 0.95)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.2)';
+                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.backgroundColor = 'rgba(13, 13, 13, 0.8)';
+                }}
+              />
+            </div>
+          </div>
+          
+          <div className="categories-container" style={{ 
+            display: 'flex', 
+            gap: '12px', 
+            overflowX: 'auto', 
+            paddingBottom: '8px',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+          }}>
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className="category-btn"
+                style={{
+                  padding: '14px 20px',
+                  borderRadius: '20px',
+                  background: selectedCategory === category 
+                    ? 'linear-gradient(135deg, #D4AF37, #B8860B)' 
+                    : 'rgba(212, 175, 55, 0.1)',
+                  color: selectedCategory === category ? '#0D0D0D' : '#D4AF37',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.3s ease',
+                  boxShadow: selectedCategory === category 
+                    ? '0 6px 20px rgba(212, 175, 55, 0.4)' 
+                    : '0 2px 8px rgba(0, 0, 0, 0.2)',
+                  backdropFilter: 'blur(10px)',
+                  border: selectedCategory === category 
+                    ? 'none' 
+                    : '1px solid rgba(212, 175, 55, 0.2)'
+                }}
+                onMouseEnter={(e) => {
+                  if (selectedCategory !== category) {
+                    e.currentTarget.style.background = 'rgba(212, 175, 55, 0.2)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.2)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedCategory !== category) {
+                    e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
+                  }
+                }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  {category === 'all' ? '🍽️' : getCategoryIcon(category)}
+                  <span>{category === 'all' ? 'Todos' : category}</span>
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Menu Items */}
-      <main style={{ padding: '32px 24px', paddingBottom: cartItemCount > 0 ? '140px' : '32px' }}>
+      {/* Menu Items Profissional */}
+      <main className="menu-main" style={{ 
+        padding: '40px 20px', 
+        paddingBottom: cartItemCount > 0 ? '160px' : '40px',
+        background: 'linear-gradient(135deg, #0D0D0D 0%, #1a1a1a 100%)',
+        minHeight: '60vh'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {filteredMenu.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
             <div style={{ fontSize: '64px', marginBottom: '24px' }}>🍽️</div>
@@ -366,24 +394,7 @@ const MenuPage: React.FC = () => {
                       inset: 0,
                       background: 'linear-gradient(to top, rgba(0,0,0,0.3), transparent)'
                     }}></div>
-                    <div style={{
-                      position: 'absolute',
-                      top: '16px',
-                      right: '16px',
-                      backgroundColor: 'rgba(0,0,0,0.7)',
-                      backdropFilter: 'blur(8px)',
-                      color: '#F5F5F5',
-                      padding: '6px 12px',
-                      borderRadius: '20px',
-                      fontSize: '12px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      fontWeight: '500'
-                    }}>
-                      <Star size={12} fill="currentColor" style={{ color: '#D4AF37' }} />
-                      4.8
-                    </div>
+
                   </div>
                 ) : (
                   <div style={{
@@ -446,76 +457,138 @@ const MenuPage: React.FC = () => {
                     </span>
                   </div>
                   
-                  <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
-                    <span style={{
-                      backgroundColor: 'rgba(4, 109, 99, 0.2)',
-                      color: '#046D63',
-                      padding: '4px 8px',
-                      borderRadius: '12px',
-                      fontSize: '11px',
-                      fontWeight: '500'
-                    }}>
-                      Vegano
-                    </span>
-                    <span style={{
-                      backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                      color: '#3b82f6',
-                      padding: '4px 8px',
-                      borderRadius: '12px',
-                      fontSize: '11px',
-                      fontWeight: '500'
-                    }}>
-                      Sem Glúten
-                    </span>
-                  </div>
+                  {(item as any).allergens && (item as any).allergens.length > 0 && (
+                    <div style={{ marginBottom: '20px' }}>
+                      <div style={{
+                        backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        color: '#ef4444',
+                        padding: '8px 12px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}>
+                        ⚠️ Contém: {(item as any).allergens.join(', ')}
+                      </div>
+                    </div>
+                  )}
                   
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addToCart(item, 1);
-                    }}
-                    disabled={!item.available}
-                    style={{
-                      width: '100%',
-                      padding: '14px',
-                      background: item.available 
-                        ? 'linear-gradient(135deg, #D4AF37, #B8860B)' 
-                        : '#2C2C2C',
-                      color: item.available ? '#0D0D0D' : '#F5F5F5',
-                      border: item.available ? 'none' : '1px solid rgba(245, 245, 245, 0.2)',
-                      borderRadius: '12px',
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      cursor: item.available ? 'pointer' : 'not-allowed',
+                  {item.available ? (
+                    <div style={{
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '8px',
-                      transition: 'all 0.3s ease',
-                      opacity: item.available ? 1 : 0.4,
-                      boxShadow: item.available ? '0 4px 15px rgba(212, 175, 55, 0.3)' : 'none'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (item.available) {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(212, 175, 55, 0.4)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (item.available) {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.3)';
-                      }
-                    }}
-                  >
-                    <Plus size={18} />
-                    {item.available ? 'Adicionar ao Prato' : 'Indisponível'}
-                  </button>
+                      gap: '16px',
+                      padding: '8px',
+                      backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                      borderRadius: '16px',
+                      border: '1px solid rgba(212, 175, 55, 0.3)'
+                    }}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const currentQty = (cart || []).find(cartItem => (cartItem as any).id === item.id)?.quantity || 0;
+                          if (currentQty > 0) {
+                            addToCart(item, -1);
+                          }
+                        }}
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '12px',
+                          border: 'none',
+                          background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                          color: '#F5F5F5',
+                          fontSize: '20px',
+                          fontWeight: '700',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'all 0.3s ease',
+                          boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(239, 68, 68, 0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                          e.currentTarget.style.boxShadow = '0 2px 8px rgba(239, 68, 68, 0.3)';
+                        }}
+                      >
+                        −
+                      </button>
+                      
+                      <span style={{
+                        fontSize: '20px',
+                        fontWeight: '700',
+                        color: '#D4AF37',
+                        minWidth: '40px',
+                        textAlign: 'center',
+                        fontFamily: 'Cinzel, serif'
+                      }}>
+                        {(cart || []).find(cartItem => (cartItem as any).id === item.id)?.quantity || 0}
+                      </span>
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          addToCart(item, 1);
+                        }}
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '12px',
+                          border: 'none',
+                          background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
+                          color: '#0D0D0D',
+                          fontSize: '20px',
+                          fontWeight: '700',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'all 0.3s ease',
+                          boxShadow: '0 2px 8px rgba(212, 175, 55, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                          e.currentTarget.style.boxShadow = '0 2px 8px rgba(212, 175, 55, 0.3)';
+                        }}
+                      >
+                        +
+                      </button>
+                    </div>
+                  ) : (
+                    <div style={{
+                      width: '100%',
+                      padding: '14px',
+                      backgroundColor: '#2C2C2C',
+                      color: '#F5F5F5',
+                      border: '1px solid rgba(245, 245, 245, 0.2)',
+                      borderRadius: '12px',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      textAlign: 'center',
+                      opacity: 0.4
+                    }}>
+                      Indisponível
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         )}
+        </div>
       </main>
 
       {/* AI Button */}
@@ -525,14 +598,18 @@ const MenuPage: React.FC = () => {
           position: 'fixed',
           bottom: cartItemCount > 0 ? '120px' : '32px',
           right: '32px',
+          width: '64px',
+          height: '64px',
           background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
           border: 'none',
-          padding: '16px',
           borderRadius: '50%',
           cursor: 'pointer',
           boxShadow: '0 8px 25px rgba(212, 175, 55, 0.4)',
           zIndex: 50,
-          transition: 'all 0.3s ease'
+          transition: 'all 0.3s ease',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'scale(1.1)';
@@ -556,37 +633,43 @@ const MenuPage: React.FC = () => {
         }}></div>
       </button>
 
-      {/* Cart Summary Luxuoso */}
+      {/* Cart Summary Premium */}
       {cartItemCount > 0 && (
-        <div style={{
+        <div className="cart-summary" style={{
           position: 'fixed',
           bottom: 0,
           left: 0,
           right: 0,
-          background: 'linear-gradient(135deg, #2C2C2C 0%, #0D0D0D 100%)',
-          backdropFilter: 'blur(20px)',
-          borderTop: '1px solid rgba(212, 175, 55, 0.3)',
-          padding: '20px 24px',
-          boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.5)',
+          background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(13, 13, 13, 0.98) 100%)',
+          backdropFilter: 'blur(30px)',
+          borderTop: '2px solid rgba(212, 175, 55, 0.3)',
+          padding: '20px',
+          boxShadow: '0 -12px 40px rgba(0, 0, 0, 0.8)',
           zIndex: 40
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ 
+            maxWidth: '1200px', 
+            margin: '0 auto',
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center'
+          }}>
+            <div className="cart-info" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <div style={{ position: 'relative' }}>
                 <div style={{
-                  backgroundColor: '#D4AF37',
+                  background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
                   color: '#0D0D0D',
-                  padding: '12px',
-                  borderRadius: '50%',
-                  boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)'
+                  padding: '14px',
+                  borderRadius: '16px',
+                  boxShadow: '0 6px 20px rgba(212, 175, 55, 0.4)'
                 }}>
-                  <ShoppingCart size={24} />
+                  <Users size={24} />
                 </div>
                 <span style={{
                   position: 'absolute',
-                  top: '-8px',
-                  right: '-8px',
-                  backgroundColor: '#ef4444',
+                  top: '-6px',
+                  right: '-6px',
+                  background: 'linear-gradient(135deg, #ef4444, #dc2626)',
                   color: '#F5F5F5',
                   fontSize: '12px',
                   fontWeight: '700',
@@ -594,51 +677,56 @@ const MenuPage: React.FC = () => {
                   borderRadius: '12px',
                   minWidth: '24px',
                   textAlign: 'center',
-                  animation: 'bounce 1s infinite'
+                  boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
+                  animation: 'bounce 2s infinite'
                 }}>
                   {cartItemCount}
                 </span>
               </div>
-              <div>
+              <div className="cart-details">
                 <p style={{ 
-                  fontSize: '16px', 
+                  fontSize: '14px', 
                   color: '#F5F5F5', 
                   margin: 0, 
-                  fontWeight: '500' 
+                  fontWeight: '500',
+                  opacity: 0.8
                 }}>
-                  {cartItemCount} {cartItemCount === 1 ? 'item' : 'itens'} no prato
+                  {cartItemCount} {cartItemCount === 1 ? 'item' : 'itens'} na mesa
                 </p>
                 <p style={{ 
-                  fontSize: '24px', 
+                  fontSize: '20px', 
                   fontWeight: '700', 
                   color: '#D4AF37', 
-                  margin: 0 
+                  margin: 0,
+                  fontFamily: 'Cinzel, serif'
                 }}>
-                  Total: R$ {cartTotal.toFixed(2)}
+                  R$ {cartTotal.toFixed(2)}
                 </p>
               </div>
             </div>
             <button
+              className="checkout-btn"
               onClick={() => navigate(`/tray?sessionId=${sessionId}&token=${token}`)}
               style={{
                 background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
                 color: '#0D0D0D',
                 border: 'none',
-                padding: '16px 32px',
-                borderRadius: '12px',
-                fontSize: '18px',
+                padding: '16px 28px',
+                borderRadius: '16px',
+                fontSize: '16px',
                 fontWeight: '700',
                 cursor: 'pointer',
-                boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)',
-                transition: 'all 0.3s ease'
+                boxShadow: '0 6px 20px rgba(212, 175, 55, 0.4)',
+                transition: 'all 0.3s ease',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 8px 25px rgba(212, 175, 55, 0.4)';
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = '0 10px 30px rgba(212, 175, 55, 0.6)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(212, 175, 55, 0.3)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(212, 175, 55, 0.4)';
               }}
             >
               Finalizar Pedido
@@ -774,87 +862,167 @@ const MenuPage: React.FC = () => {
           90% { transform: translateY(-2px); }
         }
         
-        /* Mobile Responsive Styles */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-          * {
-            box-sizing: border-box !important;
+          .menu-header {
+            padding: 16px !important;
           }
           
-          body {
-            overflow-x: hidden !important;
+          .header-content {
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 16px !important;
+          }
+          
+          .header-left {
+            flex: 1 !important;
+            gap: 12px !important;
+          }
+          
+          .logo {
+            height: 40px !important;
+          }
+          
+          .table-info {
+            gap: 4px !important;
+          }
+          
+          .table-info > div:first-child {
+            font-size: 16px !important;
+          }
+          
+          .cart-badge {
+            font-size: 10px !important;
+            padding: 2px 8px !important;
+          }
+          
+
+          
+          .filters-section {
+            padding: 16px !important;
+          }
+          
+          .search-input {
+            padding: 12px 16px 12px 44px !important;
+            font-size: 16px !important;
+          }
+          
+          .categories-container {
+            gap: 6px !important;
+            padding-bottom: 4px !important;
+          }
+          
+          .category-btn {
+            padding: 8px 12px !important;
+            font-size: 12px !important;
+            white-space: nowrap !important;
+          }
+          
+          .menu-main {
+            padding: 16px !important;
+            padding-bottom: 140px !important;
           }
           
           .menu-grid {
             grid-template-columns: 1fr !important;
             gap: 16px !important;
-            margin: 0 !important;
           }
           
-          header {
+          .cart-summary {
             padding: 12px 16px !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            border-radius: 0 !important;
           }
           
-          main {
-            padding: 16px 12px !important;
-            padding-bottom: 120px !important;
-          }
-          
-          /* Card responsiveness */
-          [style*="borderRadius"] {
-            border-radius: 12px !important;
-          }
-          
-          /* Button responsiveness */
-          button {
-            min-height: 44px !important;
-            font-size: 14px !important;
-          }
-          
-          /* Input responsiveness */
-          input {
-            font-size: 16px !important;
-            padding: 12px !important;
-          }
-          
-          /* Grid responsiveness */
-          [style*="grid"] {
-            grid-template-columns: 1fr !important;
+          .cart-info {
             gap: 12px !important;
           }
           
-          /* Flex responsiveness */
-          [style*="flex"][style*="gap"] {
-            flex-wrap: wrap !important;
-            gap: 8px !important;
+          .cart-details p:first-child {
+            font-size: 12px !important;
           }
           
-          /* Text responsiveness */
-          [style*="fontSize: '32px'"] {
-            font-size: 24px !important;
+          .cart-details p:last-child {
+            font-size: 16px !important;
           }
           
-          [style*="fontSize: '24px'"] {
-            font-size: 20px !important;
-          }
-          
-          /* Logo responsiveness */
-          img[alt*="Logo"] {
-            height: 48px !important;
-          }
-          
-          /* Cart responsiveness */
-          [style*="position: 'fixed'"][style*="bottom"] {
-            padding: 12px 16px !important;
-            left: 8px !important;
-            right: 8px !important;
-            bottom: 8px !important;
-            border-radius: 12px !important;
+          .checkout-btn {
+            padding: 10px 16px !important;
+            font-size: 14px !important;
           }
         }
         
-        /* Hide scrollbar */
-        .category-scroll::-webkit-scrollbar {
-          display: none;
+        @media (max-width: 480px) {
+          .menu-header {
+            padding: 12px !important;
+          }
+          
+          .header-left {
+            gap: 8px !important;
+          }
+          
+          .logo {
+            height: 36px !important;
+          }
+          
+          .table-info span {
+            font-size: 14px !important;
+          }
+          
+
+          
+          .filters-section {
+            padding: 12px !important;
+          }
+          
+          .search-input {
+            padding: 10px 12px 10px 40px !important;
+            font-size: 14px !important;
+          }
+          
+          .category-btn {
+            padding: 6px 10px !important;
+            font-size: 11px !important;
+          }
+          
+          .menu-main {
+            padding: 12px !important;
+            padding-bottom: 120px !important;
+          }
+          
+          .cart-summary {
+            padding: 10px 12px !important;
+          }
+          
+          .cart-details p:last-child {
+            font-size: 14px !important;
+          }
+          
+          .checkout-btn {
+            padding: 8px 12px !important;
+            font-size: 12px !important;
+          }
+        }
+        
+        /* Scrollbar Styling */
+        .categories-container::-webkit-scrollbar {
+          height: 4px;
+        }
+        
+        .categories-container::-webkit-scrollbar-track {
+          background: rgba(212, 175, 55, 0.1);
+          border-radius: 2px;
+        }
+        
+        .categories-container::-webkit-scrollbar-thumb {
+          background: rgba(212, 175, 55, 0.4);
+          border-radius: 2px;
+        }
+        
+        .categories-container::-webkit-scrollbar-thumb:hover {
+          background: rgba(212, 175, 55, 0.6);
         }
       `}</style>
     </div>
@@ -868,6 +1036,7 @@ const getCategoryIcon = (category: string) => {
     'Pratos Principais': '🍖',
     'Sobremesas': '🍰',
     'Bebidas': '🍷',
+    'Bebida': '🍷',
     'Massas': '🍝',
     'Carnes': '🥩',
     'Peixes': '🐟',
