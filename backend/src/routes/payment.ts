@@ -16,20 +16,41 @@ router.get('/debug', (req, res) => {
 // Simular pagamento PIX
 router.post('/pix', async (req, res) => {
   try {
-    const { sessionId, amount } = req.body;
+    const { sessionId, amount, items } = req.body;
+    
+    if (!sessionId) {
+      return res.status(400).json({ error: 'SessionId is required' });
+    }
+
+    // Verificar se já existe um pedido para esta sessão para evitar duplicatas
+    const existingOrdersSnapshot = await db.collection('orders')
+      .where('sessionId', '==', sessionId)
+      .where('paymentStatus', '==', 'PAID')
+      .get();
+    
+    if (!existingOrdersSnapshot.empty) {
+      const existingOrder = existingOrdersSnapshot.docs[0];
+      return res.json({ success: true, orderId: existingOrder.id });
+    }
+
+    // Buscar dados da sessão para obter o número da mesa
+    const sessionDoc = await db.collection('sessions').doc(sessionId).get();
+    const sessionData = sessionDoc.data();
+    
+    let tableNumber = 1; // Default
+    if (sessionData?.tableId) {
+      const tableDoc = await db.collection('tables').doc(sessionData.tableId).get();
+      const tableData = tableDoc.data();
+      tableNumber = tableData?.number || 1;
+    }
     
     const orderId = uuidv4();
     const order = {
       id: orderId,
-      sessionId: sessionId || 'test-session',
-      tableNumber: Math.floor(Math.random() * 10) + 1,
-      items: [{
-        menuItemId: 'item-1',
-        quantity: 1,
-        price: Number(amount) || 50,
-        name: 'Pedido Simulado'
-      }],
-      total: Number(amount) || 50,
+      sessionId,
+      tableNumber,
+      items: Array.isArray(items) ? items : [],
+      total: Number(amount) || 0,
       status: 'PENDING',
       paymentStatus: 'PAID',
       isExtra: false,

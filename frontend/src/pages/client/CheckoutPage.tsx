@@ -564,7 +564,7 @@ const CheckoutPage: React.FC = () => {
               const payload = {
                 sessionId,
                 amount: total,
-                itemCount: cart.length
+                items: cart
               };
               
               console.log('Sending payload:', payload);
@@ -586,7 +586,7 @@ const CheckoutPage: React.FC = () => {
                 setPaymentStatus('success');
                 localStorage.removeItem('cart');
                 setTimeout(() => {
-                  window.location.reload();
+                  navigate(`/order/${data.orderId}?sessionId=${sessionId}&token=${token}`);
                 }, 2000);
               } else {
                 console.error('Payment failed:', data);
