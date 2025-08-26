@@ -62,7 +62,7 @@ router.post('/tables/update-domains', async (req, res) => {
     const tablesSnapshot = await db.collection('tables').get();
     const batch = db.batch();
     
-    tablesSnapshot.docs.forEach(doc => {
+    tablesSnapshot.docs.forEach((doc: any) => {
       const tableData = doc.data();
       const newQrCode = `https://metria.nagasistemas.com/m/${tableData.restaurantId}/${doc.id}?t=`;
       
