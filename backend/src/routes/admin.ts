@@ -527,8 +527,17 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
       return res.status(400).json({ error: 'No image file provided' });
     }
 
+    console.log('Uploading file:', req.file.originalname, 'Size:', req.file.size);
+    
+    if (!bucket) {
+      console.error('Firebase bucket not initialized');
+      return res.status(500).json({ error: 'Storage not configured' });
+    }
+
     const fileName = `menu-images/${Date.now()}-${req.file.originalname}`;
     const file = bucket.file(fileName);
+    
+    console.log('Creating write stream for:', fileName);
     
     const stream = file.createWriteStream({
       metadata: {
@@ -537,30 +546,39 @@ router.post('/upload-image', upload.single('image'), async (req, res) => {
     });
 
     stream.on('error', (error: any) => {
-      console.error('Upload error:', error);
-      res.status(500).json({ error: 'Upload failed' });
+      console.error('Upload stream error:', error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Upload failed: ' + error.message });
+      }
     });
 
     stream.on('finish', async () => {
       try {
+        console.log('Upload finished, making file public');
         await file.makePublic();
         const imageUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
         
-        res.json({ 
-          success: true, 
-          imageUrl,
-          filename: fileName 
-        });
+        console.log('File uploaded successfully:', imageUrl);
+        
+        if (!res.headersSent) {
+          res.json({ 
+            success: true, 
+            imageUrl,
+            filename: fileName 
+          });
+        }
       } catch (error: any) {
         console.error('Error making file public:', error);
-        res.status(500).json({ error: 'Error making file public' });
+        if (!res.headersSent) {
+          res.status(500).json({ error: 'Error making file public: ' + error.message });
+        }
       }
     });
 
     stream.end(req.file.buffer);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error uploading image:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error: ' + error.message });
   }
 });
 
