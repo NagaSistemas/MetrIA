@@ -135,14 +135,6 @@ MetrIA/
 └── docs/              # Documentação
 ```
 
-## 🔄 Próximos Passos
-
-- [ ] Integração completa iPag
-- [ ] Notificações push
-- [ ] App mobile nativo
-- [ ] Relatórios e analytics
-- [ ] Sistema de avaliações
-
 ## 📄 Licença
 
 MIT License - veja [LICENSE](LICENSE) para detalhes.
